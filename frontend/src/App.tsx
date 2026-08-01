@@ -9,9 +9,7 @@ import { AdminStudentsPage } from "@/pages/admin/AdminStudentsPage"
 import { AdminMentorsPage } from "@/pages/admin/AdminMentorsPage"
 import { AdminBatchesPage } from "@/pages/admin/AdminBatchesPage"
 import { AdminCoursesPage } from "@/pages/admin/AdminCoursesPage"
-import { AdminAssignmentsPage } from "@/pages/admin/AdminAssignmentsPage"
 import { AdminAnnouncementsPage } from "@/pages/admin/AdminAnnouncementsPage"
-import { AdminAttendancePage } from "@/pages/admin/AdminAttendancePage"
 import { AdminActivityLogsPage } from "@/pages/admin/AdminActivityLogsPage"
 import { AdminSettingsPage } from "@/pages/admin/AdminSettingsPage"
 import { MentorDashboardPage } from "@/pages/mentor/MentorDashboardPage"
@@ -38,12 +36,10 @@ export default function App() {
             <Route path="/admin/mentors" element={<AdminMentorsPage />} />
             <Route path="/admin/batches" element={<AdminBatchesPage />} />
             <Route path="/admin/courses" element={<AdminCoursesPage />} />
-            <Route path="/admin/assignments" element={<AdminAssignmentsPage />} />
             <Route
               path="/admin/announcements"
               element={<AdminAnnouncementsPage />}
             />
-            <Route path="/admin/attendance" element={<AdminAttendancePage />} />
             <Route path="/admin/reports" element={<PlaceholderPage title="Reports" />} />
             <Route path="/admin/activity" element={<AdminActivityLogsPage />} />
             <Route path="/admin/messages" element={<PlaceholderPage title="Messages" />} />
