@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react"
-import { api, clearAuth, USER_KEY } from "@/lib/api"
+import { api, clearAuth, ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY } from "@/lib/api"
 import type { AuthResponse, User } from "@/lib/types"
 
 interface AuthContextValue {
@@ -55,6 +55,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (email: string, password: string, rememberMe?: boolean) => {
     const { data } = await api.post("/auth/login", { email, password, rememberMe })
     const payload = data.data as AuthResponse
+    localStorage.setItem(ACCESS_TOKEN_KEY, payload.accessToken)
+    localStorage.setItem(REFRESH_TOKEN_KEY, payload.refreshToken)
     localStorage.setItem(USER_KEY, JSON.stringify(payload.user))
     setUser(payload.user)
     return payload.user
