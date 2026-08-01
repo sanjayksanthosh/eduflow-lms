@@ -1,0 +1,74 @@
+# Render Blueprint for EduFlow LMS
+#
+# Deploys the Node.js backend which also serves the built React frontend
+# (see backend/src/app.ts production static/SPA serving) and points at an
+# external MongoDB Atlas cluster.
+#
+# Steps:
+#   1. Push this repo to GitHub.
+#   2. In Render, "New -> Blueprint" and select the repo.
+#   3. Fill in the "sync: false" env vars (marked as "from service" they
+#      become required placeholders in the Render dashboard).
+#      Recommended values:
+#        DATABASE_URL       your MongoDB Atlas connection string (see README)
+#        JWT_ACCESS_SECRET  random 64-char string
+#        JWT_REFRESH_SECRET random 64-char string
+#        CORS_ORIGINS       https://<service-name>.onrender.com
+#        CLIENT_URL         https://<service-name>.onrender.com
+#        API_URL            https://<service-name>.onrender.com/api
+#   4. Deploy. After first deploy completes, run `npm run db:push` (or the
+#      seed) against Atlas once, then restart.
+
+services:
+  - type: web
+    name: eduflow
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: JWT_ACCESS_EXPIRES_IN
+        value: 15m
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGINS
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: API_URL
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_UPLOAD_PRESET
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX
+        value: 300
+      - key: LOGIN_RATE_LIMIT_MAX
+        value: 10

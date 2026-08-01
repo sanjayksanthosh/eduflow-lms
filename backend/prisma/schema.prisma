@@ -1,0 +1,351 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// NOTE ON THE MONGO DB CONNECTOR
+// Enums, scalar lists and compound unique/index attributes are not supported
+// by the Prisma MongoDB connector. Role/status/type fields are stored as
+// strings and their valid values are enforced in the application layer via
+// src/constants/enums.ts. Compound uniqueness (e.g. attendance per student
+// per day) is enforced in the service layer.
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  email        String   @unique
+  passwordHash String
+  role         String   @default("STUDENT")
+  status       String   @default("ACTIVE")
+  firstName    String
+  lastName     String
+  phone        String?
+  address      String?
+  profileImage String?
+  refreshToken String?
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  student              Student?
+  mentor               Mentor?
+  announcements        Announcement[] @relation("AnnouncementAuthor")
+  studentAnnouncements Announcement[] @relation("StudentAnnouncements")
+  notifications        Notification[] @relation("NotificationRecipient")
+  sentMessages         Message[]      @relation("MessageSender")
+  receivedMessages     Message[]      @relation("MessageRecipient")
+  markedAttendance     Attendance[]
+  activityLogs         ActivityLog[]
+  passwordResets       PasswordReset[]
+
+  @@index([role])
+  @@index([status])
+}
+
+model Student {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId           String   @unique @db.ObjectId
+  admissionNumber  String   @unique
+  parentName       String?
+  parentPhone      String?
+  emergencyContact String?
+  dateOfBirth      DateTime?
+  gender           String?
+  batchId          String?  @db.ObjectId
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user              User                 @relation(fields: [userId], references: [id])
+  batch             Batch?               @relation(fields: [batchId], references: [id])
+  attendance        Attendance[]
+  submissions       AssignmentSubmission[]
+  courseEnrollments CourseEnrollment[]
+  lessonProgress    LessonProgress[]
+
+  @@index([batchId])
+}
+
+model Mentor {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @unique @db.ObjectId
+  department    String?
+  qualification String?
+  experience    Int?
+  subjects      Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user              User                 @relation(fields: [userId], references: [id])
+  batches           Batch[]
+  assignments       Assignment[]
+  lessonProgress    LessonProgress[]
+  attendance        Attendance[]
+  gradedSubmissions AssignmentSubmission[]
+
+  @@index([department])
+}
+
+model Batch {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  code        String   @unique
+  courseId    String   @db.ObjectId
+  startDate   DateTime?
+  endDate     DateTime?
+  capacity    Int      @default(30)
+  status      String   @default("ACTIVE")
+  description String?
+  mentorId    String?  @db.ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course        Course          @relation(fields: [courseId], references: [id])
+  mentor        Mentor?         @relation(fields: [mentorId], references: [id])
+  students      Student[]
+  attendance    Attendance[]
+  assignments   Assignment[]
+  announcements Announcement[]  @relation("BatchAnnouncements")
+  enrollments   CourseEnrollment[]
+  chatMessages  Message[]
+
+  @@index([mentorId])
+  @@index([status])
+}
+
+model Course {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String   @unique
+  code        String   @unique
+  description String?
+  thumbnail   String?
+  color       String   @default("#6366f1")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  modules     Module[]
+  batches     Batch[]
+  enrollments CourseEnrollment[]
+  assignments Assignment[]
+}
+
+model Module {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  courseId    String   @db.ObjectId
+  title       String
+  description String?
+  order       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course  Course          @relation(fields: [courseId], references: [id])
+  lessons Lesson[]
+}
+
+model Lesson {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  moduleId       String   @db.ObjectId
+  title          String
+  description    String?
+  videoUrl       String?
+  attachmentUrl  String?
+  attachmentName String?
+  contentType    String?
+  duration       Int      @default(0)
+  order          Int
+  isPublished    Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  module   Module          @relation(fields: [moduleId], references: [id])
+  progress LessonProgress[]
+
+  @@index([moduleId])
+}
+
+model LessonProgress {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  lessonId       String   @db.ObjectId
+  studentId      String   @db.ObjectId
+  mentorId       String?  @db.ObjectId
+  completed      Boolean  @default(false)
+  completedAt    DateTime?
+  progressPercent Int     @default(0)
+  updatedAt      DateTime @updatedAt
+
+  lesson  Lesson  @relation(fields: [lessonId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+  mentor  Mentor? @relation(fields: [mentorId], references: [id])
+}
+
+model CourseEnrollment {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  studentId  String   @db.ObjectId
+  courseId   String   @db.ObjectId
+  batchId    String?  @db.ObjectId
+  enrolledAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+  course  Course  @relation(fields: [courseId], references: [id])
+  batch   Batch?  @relation(fields: [batchId], references: [id])
+}
+
+model Attendance {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  batchId    String   @db.ObjectId
+  studentId  String   @db.ObjectId
+  mentorId   String   @db.ObjectId
+  date       DateTime
+  status     String
+  remarks    String?
+  markedById String   @db.ObjectId
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  batch    Batch  @relation(fields: [batchId], references: [id])
+  student  Student @relation(fields: [studentId], references: [id])
+  mentor   Mentor @relation(fields: [mentorId], references: [id])
+  markedBy User   @relation(fields: [markedById], references: [id])
+
+  @@index([studentId])
+  @@index([date])
+}
+
+model Assignment {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  batchId              String   @db.ObjectId
+  courseId             String?  @db.ObjectId
+  mentorId             String   @db.ObjectId
+  title                String
+  description          String?
+  instructions         String?
+  maxMarks             Int      @default(100)
+  dueDate              DateTime
+  lateSubmissionAllowed Boolean @default(false)
+  attachmentUrl        String?
+  attachmentName       String?
+  status               String   @default("PUBLISHED")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  batch       Batch                 @relation(fields: [batchId], references: [id])
+  course      Course?               @relation(fields: [courseId], references: [id])
+  mentor      Mentor                @relation(fields: [mentorId], references: [id])
+  submissions AssignmentSubmission[]
+
+  @@index([batchId])
+}
+
+model AssignmentSubmission {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  assignmentId      String    @db.ObjectId
+  studentId         String    @db.ObjectId
+  content           String?
+  fileUrl           String?
+  fileName          String?
+  fileSize          Int?
+  status            String    @default("SUBMITTED")
+  marks             Int?
+  feedback          String?
+  submittedAt       DateTime  @default(now())
+  gradedAt          DateTime?
+  gradedByMentorId  String?   @db.ObjectId
+  isLate            Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id])
+  student    Student    @relation(fields: [studentId], references: [id])
+  gradedBy   Mentor?    @relation(fields: [gradedByMentorId], references: [id])
+
+  @@index([studentId])
+}
+
+model Announcement {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  authorId    String    @db.ObjectId
+  title       String
+  content     String
+  target      String    @default("ALL")
+  batchId     String?   @db.ObjectId
+  studentId   String?   @db.ObjectId
+  scheduledAt DateTime?
+  publishedAt DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  author  User   @relation("AnnouncementAuthor", fields: [authorId], references: [id])
+  batch   Batch? @relation("BatchAnnouncements", fields: [batchId], references: [id])
+  student User?  @relation("StudentAnnouncements", fields: [studentId], references: [id])
+
+  @@index([target])
+}
+
+model Notification {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  recipientId String   @db.ObjectId
+  title       String
+  body        String
+  type        String   @default("SYSTEM")
+  isRead      Boolean  @default(false)
+  link        String?
+  createdAt   DateTime @default(now())
+
+  recipient User @relation("NotificationRecipient", fields: [recipientId], references: [id])
+
+  @@index([recipientId])
+}
+
+model Message {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  batchId       String    @db.ObjectId
+  senderId      String    @db.ObjectId
+  recipientId   String?   @db.ObjectId
+  content       String
+  attachmentUrl String?
+  isRead        Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+
+  batch     Batch @relation(fields: [batchId], references: [id])
+  sender    User  @relation("MessageSender", fields: [senderId], references: [id])
+  recipient User? @relation("MessageRecipient", fields: [recipientId], references: [id])
+
+  @@index([batchId])
+}
+
+model ActivityLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  type      String
+  action    String
+  metadata  Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model PasswordReset {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @db.ObjectId
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Settings {
+  id        String   @id @default("default") @map("_id")
+  data      Json
+  updatedAt DateTime @updatedAt
+}
