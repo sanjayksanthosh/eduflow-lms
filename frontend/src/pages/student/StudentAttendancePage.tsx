@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react"
-import { CalendarCheck, CalendarDays, CalendarX, Clock } from "lucide-react"
+import { CalendarCheck, CalendarDays, CalendarX, Clock, X } from "lucide-react"
 import { api, getErrorMessage } from "@/lib/api"
 import { PageHeader } from "@/components/shared/PageHeader"
 import { PageLoader } from "@/components/shared/PageLoader"
 import { ErrorState } from "@/components/shared/ErrorState"
 import { EmptyState } from "@/components/shared/EmptyState"
+import { AttendanceHeatmap } from "@/components/shared/AttendanceHeatmap"
 import { StatCard } from "@/components/shared/StatCard"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { formatDate } from "@/lib/format"
 
@@ -42,8 +45,7 @@ const statusBadge = (status: string) => {
 }
 
 export function StudentAttendancePage() {
-  const today = new Date().toISOString().slice(0, 7)
-  const [month, setMonth] = useState(today)
+  const [month, setMonth] = useState("")
   const [data, setData] = useState<AttendanceHistory | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -52,7 +54,9 @@ export function StudentAttendancePage() {
     setLoading(true)
     setError(null)
     try {
-      const { data: res } = await api.get(`/student/attendance`, { params: { month: monthValue } })
+      const { data: res } = await api.get("/student/attendance", {
+        params: monthValue ? { month: monthValue } : {},
+      })
       setData(res.data as AttendanceHistory)
     } catch (err) {
       setError(getErrorMessage(err))
@@ -84,15 +88,30 @@ export function StudentAttendancePage() {
         title="Attendance"
         description="Your attendance records."
         actions={
-          <Input
-            type="month"
-            value={month}
-            onChange={(e) => {
-              setMonth(e.target.value)
-              void load(e.target.value)
-            }}
-            className="w-auto"
-          />
+          <div className="flex items-center gap-2">
+            <Input
+              type="month"
+              value={month}
+              onChange={(e) => {
+                setMonth(e.target.value)
+                void load(e.target.value)
+              }}
+              className="w-auto"
+            />
+            {month ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setMonth("")
+                  void load("")
+                }}
+                title="Show all time"
+              >
+                <X className="size-4" />
+              </Button>
+            ) : null}
+          </div>
         }
       />
 
@@ -103,11 +122,23 @@ export function StudentAttendancePage() {
         <StatCard title="Absent" value={summary.ABSENT ?? 0} icon={CalendarX} />
       </div>
 
+      <Card>
+        <CardHeader>
+          <CardTitle>Attendance Overview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AttendanceHeatmap records={data?.records ?? []} />
+          <p className="mt-3 text-xs text-muted-foreground">
+            Hover a box to see the date and status. Last 26 weeks shown.
+          </p>
+        </CardContent>
+      </Card>
+
       {data && data.records.length === 0 ? (
         <EmptyState
           icon={CalendarDays}
-          title="No records for this month"
-          description="Attendance marked for this month will appear here."
+          title="No records for this period"
+          description="Attendance marked for this period will appear here."
         />
       ) : (
         <div className="rounded-lg border">
