@@ -13,7 +13,17 @@ import { AdminAnnouncementsPage } from "@/pages/admin/AdminAnnouncementsPage"
 import { AdminActivityLogsPage } from "@/pages/admin/AdminActivityLogsPage"
 import { AdminSettingsPage } from "@/pages/admin/AdminSettingsPage"
 import { MentorDashboardPage } from "@/pages/mentor/MentorDashboardPage"
+import { MentorBatchesPage } from "@/pages/mentor/MentorBatchesPage"
+import { MentorAttendancePage } from "@/pages/mentor/MentorAttendancePage"
+import { MentorAssignmentsPage } from "@/pages/mentor/MentorAssignmentsPage"
+import { MentorAnnouncementsPage } from "@/pages/mentor/MentorAnnouncementsPage"
+import { MentorMessagesPage } from "@/pages/mentor/MentorMessagesPage"
 import { StudentDashboardPage } from "@/pages/student/StudentDashboardPage"
+import { StudentCoursesPage } from "@/pages/student/StudentCoursesPage"
+import { StudentAttendancePage } from "@/pages/student/StudentAttendancePage"
+import { StudentAssignmentsPage } from "@/pages/student/StudentAssignmentsPage"
+import { StudentAnnouncementsPage } from "@/pages/student/StudentAnnouncementsPage"
+import { StudentNotificationsPage } from "@/pages/student/StudentNotificationsPage"
 import { PlaceholderPage } from "@/pages/PlaceholderPage"
 import { useAuth } from "@/context/AuthContext"
 
@@ -49,30 +59,24 @@ export default function App() {
 
           <Route element={<ProtectedRoute roles={["MENTOR"]} />}>
             <Route path="/mentor" element={<MentorDashboardPage />} />
-            <Route path="/mentor/batches" element={<PlaceholderPage title="My Batches" />} />
-            <Route path="/mentor/attendance" element={<PlaceholderPage title="Attendance" />} />
-            <Route path="/mentor/assignments" element={<PlaceholderPage title="Assignments" />} />
+            <Route path="/mentor/batches" element={<MentorBatchesPage />} />
+            <Route path="/mentor/attendance" element={<MentorAttendancePage />} />
+            <Route path="/mentor/assignments" element={<MentorAssignmentsPage />} />
             <Route
               path="/mentor/announcements"
-              element={<PlaceholderPage title="Announcements" />}
+              element={<MentorAnnouncementsPage />}
             />
-            <Route path="/mentor/messages" element={<PlaceholderPage title="Messages" />} />
+            <Route path="/mentor/messages" element={<MentorMessagesPage />} />
             <Route path="/mentor/profile" element={<PlaceholderPage title="Profile" />} />
           </Route>
 
           <Route element={<ProtectedRoute roles={["STUDENT"]} />}>
             <Route path="/student" element={<StudentDashboardPage />} />
-            <Route path="/student/courses" element={<PlaceholderPage title="My Courses" />} />
-            <Route path="/student/attendance" element={<PlaceholderPage title="Attendance" />} />
-            <Route path="/student/assignments" element={<PlaceholderPage title="Assignments" />} />
-            <Route
-              path="/student/announcements"
-              element={<PlaceholderPage title="Announcements" />}
-            />
-            <Route
-              path="/student/notifications"
-              element={<PlaceholderPage title="Notifications" />}
-            />
+            <Route path="/student/courses" element={<StudentCoursesPage />} />
+            <Route path="/student/attendance" element={<StudentAttendancePage />} />
+            <Route path="/student/assignments" element={<StudentAssignmentsPage />} />
+            <Route path="/student/announcements" element={<StudentAnnouncementsPage />} />
+            <Route path="/student/notifications" element={<StudentNotificationsPage />} />
             <Route path="/student/profile" element={<PlaceholderPage title="Profile" />} />
           </Route>
         </Route>

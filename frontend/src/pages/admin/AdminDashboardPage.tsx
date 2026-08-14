@@ -1,10 +1,12 @@
-import { BookOpen, Library, UserCheck, Users } from "lucide-react"
+import { BookOpen, Library, UserCheck, Users, Plus } from "lucide-react"
+import { Link } from "react-router-dom"
 import { PageHeader } from "@/components/shared/PageHeader"
 import { StatCard } from "@/components/shared/StatCard"
 import { PageLoader } from "@/components/shared/PageLoader"
 import { ErrorState } from "@/components/shared/ErrorState"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { useApi } from "@/hooks/useApi"
 import { timeAgo } from "@/lib/format"
 import type { DashboardStats } from "@/lib/types"
@@ -39,20 +41,31 @@ export function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Dashboard" description="Overview of your institution." />
+      <PageHeader
+        title="Dashboard"
+        description="Overview of your institution."
+        actions={
+          <Link to="/admin/students">
+            <Button>
+              <Plus /> Add student
+            </Button>
+          </Link>
+        }
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Total Students" value={stats.totalStudents} icon={Users} />
-        <StatCard title="Total Mentors" value={stats.totalMentors} icon={UserCheck} />
-        <StatCard title="Batches" value={stats.totalBatches} icon={BookOpen} />
-        <StatCard title="Courses" value={stats.totalCourses} icon={Library} />
+        <StatCard title="Total Students" value={stats.totalStudents} icon={Users} to="/admin/students" />
+        <StatCard title="Total Mentors" value={stats.totalMentors} icon={UserCheck} to="/admin/mentors" />
+        <StatCard title="Batches" value={stats.totalBatches} icon={BookOpen} to="/admin/batches" />
+        <StatCard title="Courses" value={stats.totalCourses} icon={Library} to="/admin/courses" />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent activity</CardTitle>
-          </CardHeader>
+        <Link to="/admin/activity" className="group">
+          <Card className="transition-all group-hover:-translate-y-0.5 group-hover:border-primary/40 group-hover:shadow-md">
+            <CardHeader>
+              <CardTitle>Recent activity</CardTitle>
+            </CardHeader>
           <CardContent>
             {recentActivities.length === 0 ? (
               <p className="text-sm text-muted-foreground">No recent activity.</p>
@@ -79,7 +92,8 @@ export function AdminDashboardPage() {
               </ul>
             )}
           </CardContent>
-        </Card>
+          </Card>
+        </Link>
 
         <Card>
           <CardHeader>

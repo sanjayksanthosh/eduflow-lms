@@ -40,14 +40,17 @@ const attachAuthCookies = (res: Response, accessToken: string, refreshToken: str
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const body = req.body as LoginInput;
+  const identifier = body.identifier.trim();
 
-  const user = await prisma.user.findUnique({
-    where: { email: body.email.toLowerCase() },
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [{ email: identifier.toLowerCase() }, { phone: identifier }],
+    },
     include: { student: true, mentor: true },
   });
 
   if (!user || !(await verifyPassword(body.password, user.passwordHash))) {
-    throw ApiError.unauthorized('Invalid email or password.');
+    throw ApiError.unauthorized('Invalid credentials.');
   }
 
   if (user.status === 'SUSPENDED') {

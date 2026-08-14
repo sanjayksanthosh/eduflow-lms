@@ -61,7 +61,7 @@ export function DataTable<T>({
         </TableHeader>
         <TableBody>
           {data.map((row) => (
-            <TableRow key={keyExtractor(row)}>
+            <TableRow key={keyExtractor(row)} className="transition-colors hover:bg-muted/40">
               {columns.map((col) => (
                 <TableCell key={col.key} className={col.className}>
                   {col.cell ? col.cell(row) : null}

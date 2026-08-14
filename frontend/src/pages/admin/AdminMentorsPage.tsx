@@ -47,8 +47,6 @@ interface MentorFormState {
   email: string
   password: string
   phone: string
-  department: string
-  qualification: string
   experience: string
   subjects: string
 }
@@ -59,8 +57,6 @@ const emptyForm: MentorFormState = {
   email: "",
   password: "",
   phone: "",
-  department: "",
-  qualification: "",
   experience: "",
   subjects: "",
 }
@@ -90,8 +86,6 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
             email: mentor.user.email,
             password: "",
             phone: mentor.user.phone ?? "",
-            department: mentor.department ?? "",
-            qualification: mentor.qualification ?? "",
             experience: mentor.experience != null ? String(mentor.experience) : "",
             subjects: mentor.subjects?.join(", ") ?? "",
           }
@@ -112,8 +106,6 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
     try {
       const common = {
         phone: form.phone.trim() || undefined,
-        department: form.department.trim() || undefined,
-        qualification: form.qualification.trim() || undefined,
         experience: form.experience.trim() ? Number(form.experience) : undefined,
         subjects: form.subjects.trim()
           ? form.subjects
@@ -199,24 +191,6 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
             <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
               <Input id="phone" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="department">Department</Label>
-              <Input
-                id="department"
-                value={form.department}
-                onChange={(e) => set("department", e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="qualification">Qualification</Label>
-              <Input
-                id="qualification"
-                value={form.qualification}
-                onChange={(e) => set("qualification", e.target.value)}
-              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="experience">Years of experience</Label>
@@ -370,16 +344,6 @@ export function AdminMentorsPage() {
       ),
     },
     {
-      key: "department",
-      header: "Department",
-      cell: (m) => <span className="text-sm">{m.department ?? "—"}</span>,
-    },
-    {
-      key: "qualification",
-      header: "Qualification",
-      cell: (m) => <span className="text-sm">{m.qualification ?? "—"}</span>,
-    },
-    {
       key: "batches",
       header: "Batches",
       cell: (m) =>
@@ -477,7 +441,7 @@ export function AdminMentorsPage() {
             setSearch(value)
             debounce(value)
           }}
-          placeholder="Search name, email or department..."
+          placeholder="Search name or email..."
           className="w-full sm:w-72"
         />
         <Select value={status} onValueChange={(v) => { setStatus(v ?? ""); setPage(1) }}>

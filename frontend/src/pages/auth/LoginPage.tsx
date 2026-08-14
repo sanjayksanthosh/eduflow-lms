@@ -22,7 +22,7 @@ import { getErrorMessage } from "@/lib/api"
 import { cn } from "@/lib/utils"
 
 const loginSchema = z.object({
-  email: z.string().email("Enter a valid email address."),
+  identifier: z.string().trim().min(1, "Enter your email or phone number."),
   password: z.string().min(6, "Password must be at least 6 characters."),
   rememberMe: z.boolean().optional(),
 })
@@ -43,7 +43,7 @@ export function LoginPage() {
     formState: { errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "", rememberMe: false },
+    defaultValues: { identifier: "admin@eduflow.app", password: "Admin@123", rememberMe: false },
   })
 
   const rememberMe = watch("rememberMe")
@@ -51,7 +51,7 @@ export function LoginPage() {
   const onSubmit = async (values: LoginForm) => {
     setSubmitting(true)
     try {
-      const user = await login(values.email, values.password, values.rememberMe)
+      const user = await login(values.identifier, values.password, values.rememberMe)
       toast.success(`Welcome back, ${user.firstName}!`)
       const from = (location.state as { from?: string } | null)?.from
       navigate(from ?? `/${user.role.toLowerCase()}`, { replace: true })
@@ -72,17 +72,17 @@ export function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="identifier">Email or phone</Label>
               <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                aria-invalid={Boolean(errors.email)}
-                {...register("email")}
+                id="identifier"
+                type="text"
+                autoComplete="username"
+                placeholder="you@example.com or phone number"
+                aria-invalid={Boolean(errors.identifier)}
+                {...register("identifier")}
               />
-              {errors.email ? (
-                <p className="text-xs text-destructive">{errors.email.message}</p>
+              {errors.identifier ? (
+                <p className="text-xs text-destructive">{errors.identifier.message}</p>
               ) : null}
             </div>
             <div className="grid gap-2">
