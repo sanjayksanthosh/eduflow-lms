@@ -44,6 +44,8 @@ export const NAV_ITEMS: Record<Role, NavEntry[]> = {
     { to: "/mentor/assignments", label: "Assignments", icon: ClipboardList },
     { to: "/mentor/announcements", label: "Announcements", icon: Megaphone },
     { to: "/mentor/messages", label: "Messages", icon: MessageSquare },
+    { section: "Analytics" },
+    { to: "/mentor/reports", label: "Reports", icon: BarChart3 },
   ],
   STUDENT: [
     { to: "/student", label: "Dashboard", icon: LayoutDashboard },
@@ -52,5 +54,7 @@ export const NAV_ITEMS: Record<Role, NavEntry[]> = {
     { to: "/student/assignments", label: "Assignments", icon: ClipboardList },
     { to: "/student/announcements", label: "Announcements", icon: Megaphone },
     { to: "/student/notifications", label: "Notifications", icon: Bell },
+    { section: "Account" },
+    { to: "/student/profile", label: "My Profile", icon: Users },
   ],
 }

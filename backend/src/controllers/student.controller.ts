@@ -6,6 +6,7 @@ import * as dashboardService from '../services/dashboard.service';
 import * as attendanceService from '../services/attendance.service';
 import * as assignmentService from '../services/assignment.service';
 import * as announcementService from '../services/announcement.service';
+import * as studentService from '../services/student.service';
 import { storeUpload } from '../services/upload.service';
 
 const requireStudentId = (req: Request): string => {
@@ -16,6 +17,11 @@ const requireStudentId = (req: Request): string => {
 export const getDashboard = asyncHandler(async (req: Request, res: Response) => {
   const studentId = requireStudentId(req);
   res.json({ success: true, data: await dashboardService.studentDashboard(studentId, req.user!.id) });
+});
+
+export const getMe = asyncHandler(async (req: Request, res: Response) => {
+  const studentId = requireStudentId(req);
+  res.json({ success: true, data: await studentService.getStudent(studentId) });
 });
 
 // ---------------- Courses ----------------

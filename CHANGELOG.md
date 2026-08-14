@@ -2,6 +2,18 @@
 
 All notable changes to EduFlow LMS.
 
+## [Unreleased]
+
+### Added
+- Mentor reports page (`/mentor/reports`): aggregate report table of all
+  students across the mentor's batches (attendance %, average marks,
+  submissions, course progress) with search and batch filters, plus a full
+  per-student report dialog (personal info, assignment results, attendance
+  history) backed by a new `GET /mentor/reports` endpoint.
+- Student profile page (`/student/profile`): cover-style profile with personal
+  and academic details (attendance, marks, course progress, recent results and
+  attendance) backed by a new `GET /student/me` endpoint.
+
 ## [1.0.0] - 2026-08-01
 
 ### Added

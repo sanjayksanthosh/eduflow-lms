@@ -11,6 +11,7 @@ router.use(authenticate, authorize('STUDENT'));
 
 // Dashboard
 router.get('/dashboard', student.getDashboard);
+router.get('/me', student.getMe);
 
 // ---------------- Courses ----------------
 router.get('/courses', student.getCourses);

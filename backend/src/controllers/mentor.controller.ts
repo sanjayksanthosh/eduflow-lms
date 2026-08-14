@@ -148,6 +148,87 @@ export const gradeSubmission = asyncHandler(async (req: Request, res: Response) 
   res.json({ success: true, message: 'Submission graded.', data: graded });
 });
 
+// ---------------- Reports ----------------
+export const getReports = asyncHandler(async (req: Request, res: Response) => {
+  const mentorId = requireMentorId(req);
+  const batches = await prisma.batch.findMany({
+    where: { mentorId },
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      course: { select: { id: true, title: true, color: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+  const batchIds = batches.map((b) => b.id);
+  const students = await prisma.student.findMany({
+    where: { batchId: { in: batchIds } },
+    include: {
+      user: {
+        select: { firstName: true, lastName: true, email: true, phone: true, profileImage: true },
+      },
+      batch: true,
+      attendance: { select: { status: true } },
+      submissions: { select: { marks: true } },
+    },
+    orderBy: { admissionNumber: 'asc' },
+  });
+
+  const reports = await Promise.all(
+    students.map(async (s) => {
+      const present = s.attendance.filter((a) => a.status === 'PRESENT' || a.status === 'LATE').length;
+      const attendancePercent =
+        s.attendance.length === 0 ? 0 : Math.round((present / s.attendance.length) * 100);
+      const graded = s.submissions.filter((sub) => sub.marks != null);
+      const averageMarks =
+        graded.length === 0
+          ? 0
+          : Math.round(graded.reduce((acc, sub) => acc + (sub.marks ?? 0), 0) / graded.length);
+
+      let courseProgress = 0;
+      if (s.batch?.courseId) {
+        const totalLessons = await prisma.lesson.count({
+          where: { module: { courseId: s.batch.courseId } },
+        });
+        const completed = await prisma.lessonProgress.count({
+          where: {
+            studentId: s.id,
+            completed: true,
+            lesson: { module: { courseId: s.batch.courseId } },
+          },
+        });
+        courseProgress = totalLessons === 0 ? 0 : Math.round((completed / totalLessons) * 100);
+      }
+
+      return {
+        id: s.id,
+        admissionNumber: s.admissionNumber,
+        gender: s.gender,
+        user: s.user,
+        batch: s.batch ? { id: s.batch.id, name: s.batch.name, code: s.batch.code } : null,
+        course: batches.find((b) => b.id === s.batch?.id)?.course ?? null,
+        stats: {
+          attendancePercent,
+          attendanceRecords: s.attendance.length,
+          assignmentsSubmitted: s.submissions.length,
+          averageMarks,
+          courseProgress,
+        },
+      };
+    })
+  );
+
+  res.json({
+    success: true,
+    data: {
+      batches,
+      totalStudents: students.length,
+      students: reports,
+    },
+  });
+});
+
 // ---------------- Students ----------------
 export const getStudent = asyncHandler(async (req: Request, res: Response) => {
   const mentorId = requireMentorId(req);

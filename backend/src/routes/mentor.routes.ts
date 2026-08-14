@@ -23,6 +23,9 @@ router.get('/dashboard', mentor.getDashboard);
 router.get('/batches', mentor.listBatches);
 router.get('/batches/:id', mentor.getBatch);
 
+// ---------------- Reports ----------------
+router.get('/reports', mentor.getReports);
+
 // ---------------- Attendance ----------------
 router.get('/batches/:batchId/attendance', mentor.getAttendance);
 router.post('/batches/:batchId/attendance', validate(markAttendanceSchema), mentor.markAttendance);
