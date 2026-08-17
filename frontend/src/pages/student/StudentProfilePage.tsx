@@ -136,7 +136,6 @@ export function StudentProfilePage() {
                   <BadgeCheck className="size-5 text-primary" />
                 </div>
                 <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                  <Badge variant="outline">{profile?.admissionNumber}</Badge>
                   <Badge>{profile?.batch?.name ?? "No batch"}</Badge>
                 </div>
               </div>

@@ -38,4 +38,8 @@ router.get('/notifications', student.getNotifications);
 router.patch('/notifications/:id/read', student.markNotificationRead);
 router.patch('/notifications/read-all', student.markAllNotificationsRead);
 
+// ---------------- Messaging ----------------
+router.get('/messages', student.listMessages);
+router.post('/messages', student.sendMessage);
+
 export default router;

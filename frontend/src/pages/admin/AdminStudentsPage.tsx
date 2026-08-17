@@ -316,6 +316,15 @@ function StudentFormDialog({ open, onOpenChange, student, batches, onSaved }: St
                 />
               </div>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="emergencyContact">Emergency contact</Label>
+              <Input
+                id="emergencyContact"
+                value={form.emergencyContact}
+                onChange={(e) => set("emergencyContact", e.target.value)}
+                placeholder="Phone or name"
+              />
+            </div>
           </div>
         </div>
         <DialogFooter>
@@ -542,11 +551,6 @@ export function AdminStudentsPage() {
       ),
     },
     {
-      key: "admission",
-      header: "Admission",
-      cell: (s) => <span className="text-sm">{s.admissionNumber}</span>,
-    },
-    {
       key: "batch",
       header: "Batch",
       cell: (s) =>
@@ -658,7 +662,7 @@ export function AdminStudentsPage() {
             setSearch(value)
             debounce(value)
           }}
-          placeholder="Search name, email or admission..."
+          placeholder="Search by name or email..."
           className="w-full sm:w-72"
         />
         <Select value={status} onValueChange={(v) => { setStatus(v ?? ""); setPage(1) }}>

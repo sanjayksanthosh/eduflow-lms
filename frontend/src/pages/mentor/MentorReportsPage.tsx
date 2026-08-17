@@ -147,7 +147,7 @@ export function MentorReportsPage() {
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <Input
-          placeholder="Search name, email or admission number..."
+          placeholder="Search by name or email..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="sm:max-w-xs"
@@ -213,7 +213,7 @@ export function MentorReportsPage() {
                   </TableCell>
                   <TableCell>
                     <p className="text-sm">{student.batch?.name ?? "—"}</p>
-                    <p className="text-xs text-muted-foreground">{student.admissionNumber}</p>
+                    <p className="text-xs text-muted-foreground">{student.course?.title ?? ""}</p>
                   </TableCell>
                   <TableCell className="text-center">
                     <span className={`text-sm font-medium ${attendanceColor(student.stats.attendancePercent)}`}>
@@ -365,7 +365,7 @@ function StudentReportDialog({ studentId, onClose }: { studentId: string | null;
                   <h3 className="text-lg font-semibold">
                     {fullName(report.user.firstName, report.user.lastName)}
                   </h3>
-                  <Badge variant="outline">{report.admissionNumber}</Badge>
+                  <Badge variant="outline">{report.user.email}</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {report.batch ? `${report.batch.name} · ${report.batch.code}` : "No batch assigned"}

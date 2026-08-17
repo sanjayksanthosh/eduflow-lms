@@ -54,6 +54,7 @@ export const NAV_ITEMS: Record<Role, NavEntry[]> = {
     { to: "/student/assignments", label: "Assignments", icon: ClipboardList },
     { to: "/student/announcements", label: "Announcements", icon: Megaphone },
     { to: "/student/notifications", label: "Notifications", icon: Bell },
+    { to: "/student/messages", label: "Messages", icon: MessageSquare },
     { section: "Account" },
     { to: "/student/profile", label: "My Profile", icon: Users },
   ],

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { CheckCircle2, ClipboardList, MoreHorizontal, Pencil, Plus, Trash2, Eye } from "lucide-react"
+import { CheckCircle2, ClipboardList, MoreHorizontal, Paperclip, Pencil, Plus, Trash2, Eye } from "lucide-react"
 import { toast } from "sonner"
 import { api, getErrorMessage } from "@/lib/api"
 import { PageHeader } from "@/components/shared/PageHeader"
@@ -65,14 +65,13 @@ interface Submission {
   assignmentId: string
   status: string
   content: string | null
-  attachmentUrl: string | null
-  attachmentName: string | null
+  fileUrl: string | null
+  fileName: string | null
   submittedAt: string
   marks: number | null
   feedback: string | null
   student: {
     id: string
-    admissionNumber: string
     user: { firstName: string; lastName: string; email: string; profileImage: string | null }
   }
 }
@@ -448,28 +447,46 @@ function SubmissionsDialog({ assignmentId, onClose, onSaved }: SubmissionsDialog
           ) : (
             <ul className="divide-y">
               {detail.submissions.map((submission) => (
-                <li key={submission.id} className="flex items-center justify-between gap-3 py-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">
-                      {fullName(submission.student.user.firstName, submission.student.user.lastName)}
-                    </p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      Submitted {formatDateTime(submission.submittedAt)}
-                    </p>
+                <li key={submission.id} className="py-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">
+                        {fullName(submission.student.user.firstName, submission.student.user.lastName)}
+                      </p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        Submitted {formatDateTime(submission.submittedAt)}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <Badge variant="outline" className={statusClass(submission.status)}>
+                        {statusLabel(submission.status)}
+                      </Badge>
+                      {submission.marks != null ? (
+                        <Badge variant="secondary">{submission.marks}/{detail.maxMarks}</Badge>
+                      ) : null}
+                      {submission.status === "SUBMITTED" ? (
+                        <Button size="sm" variant="outline" onClick={() => setGrading(submission)}>
+                          <CheckCircle2 /> Grade
+                        </Button>
+                      ) : null}
+                    </div>
                   </div>
-                  <div className="flex shrink-0 items-center gap-2">
-                    <Badge variant="outline" className={statusClass(submission.status)}>
-                      {statusLabel(submission.status)}
-                    </Badge>
-                    {submission.marks != null ? (
-                      <Badge variant="secondary">{submission.marks}/{detail.maxMarks}</Badge>
-                    ) : null}
-                    {submission.status === "SUBMITTED" ? (
-                      <Button size="sm" variant="outline" onClick={() => setGrading(submission)}>
-                        <CheckCircle2 /> Grade
-                      </Button>
-                    ) : null}
-                  </div>
+                  {submission.content ? (
+                    <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">
+                      {submission.content}
+                    </p>
+                  ) : null}
+                  {submission.fileUrl ? (
+                    <a
+                      className="mt-1 inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                      href={submission.fileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Paperclip className="size-3.5" />
+                      {submission.fileName ?? "Download"}
+                    </a>
+                  ) : null}
                 </li>
               ))}
             </ul>

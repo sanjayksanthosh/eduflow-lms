@@ -400,7 +400,7 @@ function BatchDetailDialog({ batchId, onClose, onSaved }: BatchDetailDialogProps
                           {fullName(student.user.firstName, student.user.lastName)}
                         </p>
                         <p className="truncate text-xs text-muted-foreground">
-                          {student.admissionNumber}
+                          {student.user.email}
                         </p>
                       </div>
                     </div>
@@ -452,7 +452,7 @@ function BatchDetailDialog({ batchId, onClose, onSaved }: BatchDetailDialogProps
                   <span className="min-w-0 flex-1 truncate text-sm">
                     {fullName(student.user.firstName, student.user.lastName)}
                   </span>
-                  <span className="text-xs text-muted-foreground">{student.admissionNumber}</span>
+                  <span className="text-xs text-muted-foreground">{student.user.email}</span>
                 </label>
               ))}
             </div>

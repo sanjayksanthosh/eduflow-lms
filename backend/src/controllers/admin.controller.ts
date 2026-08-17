@@ -231,8 +231,12 @@ export const getAssignment = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const createAssignment = asyncHandler(async (req: Request, res: Response) => {
-  const mentor = await prisma.mentor.findUnique({ where: { userId: req.user!.id } });
-  const assignment = await assignmentService.createAssignment(req.body, mentor?.id ?? '');
+  const { mentorId } = req.body as { mentorId?: string };
+  if (!mentorId) {
+    const { ApiError: AE } = await import('../utils/ApiError');
+    throw new AE(400, 'mentorId is required.');
+  }
+  const assignment = await assignmentService.createAssignment(req.body, mentorId);
   res.status(201).json({ success: true, message: 'Assignment created.', data: assignment });
 });
 

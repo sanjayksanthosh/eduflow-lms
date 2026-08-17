@@ -239,3 +239,59 @@ export const markAllNotificationsRead = asyncHandler(async (req: Request, res: R
   });
   res.json({ success: true, message: 'All notifications marked as read.' });
 });
+
+// ---------------- Messaging ----------------
+export const listMessages = asyncHandler(async (req: Request, res: Response) => {
+  const studentId = requireStudentId(req);
+  const student = await prisma.student.findUnique({ where: { id: studentId } });
+  if (!student?.batchId) throw ApiError.forbidden('No batch assigned.');
+
+  const messages = await prisma.message.findMany({
+    where: {
+      batchId: student.batchId,
+      OR: [
+        { recipientId: null },
+        { recipientId: req.user!.id },
+        { senderId: req.user!.id },
+      ],
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 100,
+    include: {
+      sender: { select: { id: true, firstName: true, lastName: true, role: true, profileImage: true } },
+    },
+  });
+  res.json({ success: true, data: messages.reverse() });
+});
+
+export const sendMessage = asyncHandler(async (req: Request, res: Response) => {
+  const studentId = requireStudentId(req);
+  const student = await prisma.student.findUnique({ where: { id: studentId } });
+  if (!student?.batchId) throw ApiError.forbidden('No batch assigned.');
+  if (!req.body.content?.trim()) throw ApiError.badRequest('Message content is required.');
+
+  const message = await prisma.message.create({
+    data: {
+      batchId: student.batchId,
+      senderId: req.user!.id,
+      content: req.body.content.trim(),
+    },
+  });
+
+  const batch = await prisma.batch.findUnique({ where: { id: student.batchId } });
+  const mentor = batch?.mentorId
+    ? await prisma.mentor.findUnique({ where: { id: batch.mentorId }, select: { userId: true } })
+    : null;
+  if (mentor) {
+    const { createNotification } = await import('../services/notification.service');
+    await createNotification({
+      userId: mentor.userId,
+      title: `New message from student`,
+      body: req.body.content.trim().slice(0, 120),
+      type: 'MESSAGE',
+      link: '/messages',
+    });
+  }
+
+  res.status(201).json({ success: true, data: message });
+});

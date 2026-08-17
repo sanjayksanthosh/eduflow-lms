@@ -279,7 +279,14 @@ export const listMessages = asyncHandler(async (req: Request, res: Response) => 
   const mentorId = requireMentorId(req);
   await assertBatchAssigned(mentorId, req.params.batchId);
   const messages = await prisma.message.findMany({
-    where: { batchId: req.params.batchId },
+    where: {
+      batchId: req.params.batchId,
+      OR: [
+        { recipientId: null },
+        { recipientId: req.user!.id },
+        { senderId: req.user!.id },
+      ],
+    },
     orderBy: { createdAt: 'desc' },
     take: 100,
     include: {
@@ -298,22 +305,27 @@ export const sendMessage = asyncHandler(async (req: Request, res: Response) => {
     data: {
       batchId: req.params.batchId,
       senderId: req.user!.id,
-      content: req.body.content,
+      content: req.body.content.trim(),
+      recipientId: req.body.recipientId || null,
     },
   });
 
+  const where = req.body.recipientId
+    ? { userId: req.body.recipientId }
+    : { batchId: req.params.batchId };
+
   const students = await prisma.student.findMany({
-    where: { batchId: req.params.batchId },
+    where,
     select: { userId: true },
   });
   await Promise.all(
     students.map((s) =>
       createNotification({
         userId: s.userId,
-        title: `New message in ${batch.name}`,
-        body: req.body.content.slice(0, 120),
+        title: `New message from ${batch.name}`,
+        body: req.body.content.trim().slice(0, 120),
         type: 'MESSAGE',
-        link: '/announcements',
+        link: '/messages',
       })
     )
   );

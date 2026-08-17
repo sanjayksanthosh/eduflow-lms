@@ -141,6 +141,7 @@ function AssignmentDialog({
 }) {
   const [assignment, setAssignment] = useState<StudentAssignment | null>(null)
   const [loading, setLoading] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [content, setContent] = useState("")
   const [file, setFile] = useState<File | null>(null)
   const [saving, setSaving] = useState(false)
@@ -149,13 +150,14 @@ function AssignmentDialog({
   useEffect(() => {
     if (!assignmentId) return
     setAssignment(null)
+    setLoadError(null)
     setContent("")
     setFile(null)
     setLoading(true)
     api
       .get(`/student/assignments/${assignmentId}`)
       .then(({ data }) => setAssignment(data.data as StudentAssignment))
-      .catch((err) => toast.error(getErrorMessage(err)))
+      .catch((err) => setLoadError(getErrorMessage(err)))
       .finally(() => setLoading(false))
   }, [assignmentId])
 
@@ -191,6 +193,11 @@ function AssignmentDialog({
         </DialogHeader>
         {loading ? (
           <p className="py-8 text-center text-sm text-muted-foreground">Loading...</p>
+        ) : loadError ? (
+          <div className="space-y-3 py-8 text-center">
+            <p className="text-sm text-destructive">{loadError}</p>
+            <Button variant="outline" size="sm" onClick={onClose}>Close</Button>
+          </div>
         ) : assignment ? (
           <div className="space-y-4">
             <div className="space-y-2 text-sm">

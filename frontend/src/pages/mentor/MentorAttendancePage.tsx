@@ -220,7 +220,7 @@ function StudentInfo({ student }: { student: BatchAttendanceStudent }) {
       <div className="min-w-0">
         <p className="truncate text-sm font-medium">{student.name}</p>
         <p className="truncate text-xs text-muted-foreground">
-          {student.admissionNumber} · {student.email}
+          {student.email}
         </p>
       </div>
     </div>

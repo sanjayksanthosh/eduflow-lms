@@ -174,7 +174,7 @@ function BatchDetailDialog({ batchId, onClose }: { batchId: string | null; onClo
                       </p>
                     </div>
                   </div>
-                  <Badge variant="outline">{student.admissionNumber}</Badge>
+                  <Badge variant="outline">{student.user.email}</Badge>
                 </li>
               ))}
             </ul>

@@ -25,6 +25,7 @@ import { StudentAssignmentsPage } from "@/pages/student/StudentAssignmentsPage"
 import { StudentAnnouncementsPage } from "@/pages/student/StudentAnnouncementsPage"
 import { StudentNotificationsPage } from "@/pages/student/StudentNotificationsPage"
 import { StudentProfilePage } from "@/pages/student/StudentProfilePage"
+import { StudentMessagesPage } from "@/pages/student/StudentMessagesPage"
 import { MentorReportsPage } from "@/pages/mentor/MentorReportsPage"
 import { PlaceholderPage } from "@/pages/PlaceholderPage"
 import { useAuth } from "@/context/AuthContext"
@@ -80,6 +81,7 @@ export default function App() {
             <Route path="/student/assignments" element={<StudentAssignmentsPage />} />
             <Route path="/student/announcements" element={<StudentAnnouncementsPage />} />
             <Route path="/student/notifications" element={<StudentNotificationsPage />} />
+            <Route path="/student/messages" element={<StudentMessagesPage />} />
             <Route path="/student/profile" element={<StudentProfilePage />} />
           </Route>
         </Route>

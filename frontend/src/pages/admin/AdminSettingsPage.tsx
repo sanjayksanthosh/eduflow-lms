@@ -53,6 +53,7 @@ export function AdminSettingsPage() {
         theme: settings.theme,
         academicYear: settings.academicYear,
         semester: settings.semester,
+        holidays: settings.holidays,
       })
       toast.success("Settings saved.")
     } catch (err) {
