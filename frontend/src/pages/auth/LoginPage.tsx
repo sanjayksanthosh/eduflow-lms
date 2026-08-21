@@ -43,7 +43,7 @@ export function LoginPage() {
     formState: { errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { identifier: "admin@eduflow.app", password: "Admin@123", rememberMe: false },
+    defaultValues: { identifier: "", password: "", rememberMe: false },
   })
 
   const rememberMe = watch("rememberMe")

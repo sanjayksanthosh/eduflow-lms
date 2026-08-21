@@ -8,7 +8,6 @@ import {
   SheetContent,
   SheetDescription,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet"
 import { SidebarContent } from "@/components/layout/Sidebar"
 import { ThemeToggle } from "@/components/layout/ThemeToggle"
@@ -28,13 +27,6 @@ export function AppLayout() {
       </aside>
 
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetTrigger
-          render={
-            <Button variant="ghost" size="icon-sm" className="lg:hidden" aria-label="Open menu">
-              <Menu className="size-4" />
-            </Button>
-          }
-        />
         <SheetContent side="left" className="w-64 p-0">
           <SheetTitle className="sr-only">Navigation menu</SheetTitle>
           <SheetDescription className="sr-only">

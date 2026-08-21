@@ -289,7 +289,7 @@ export const sendMessage = asyncHandler(async (req: Request, res: Response) => {
       title: `New message from student`,
       body: req.body.content.trim().slice(0, 120),
       type: 'MESSAGE',
-      link: '/messages',
+      link: '/mentor/messages',
     });
   }
 

@@ -27,7 +27,8 @@ import { StudentNotificationsPage } from "@/pages/student/StudentNotificationsPa
 import { StudentProfilePage } from "@/pages/student/StudentProfilePage"
 import { StudentMessagesPage } from "@/pages/student/StudentMessagesPage"
 import { MentorReportsPage } from "@/pages/mentor/MentorReportsPage"
-import { PlaceholderPage } from "@/pages/PlaceholderPage"
+import { AdminReportsPage } from "@/pages/admin/AdminReportsPage"
+import { ProfilePage } from "@/pages/shared/ProfilePage"
 import { useAuth } from "@/context/AuthContext"
 
 export default function App() {
@@ -53,11 +54,10 @@ export default function App() {
               path="/admin/announcements"
               element={<AdminAnnouncementsPage />}
             />
-            <Route path="/admin/reports" element={<PlaceholderPage title="Reports" />} />
+            <Route path="/admin/reports" element={<AdminReportsPage />} />
             <Route path="/admin/activity" element={<AdminActivityLogsPage />} />
-            <Route path="/admin/messages" element={<PlaceholderPage title="Messages" />} />
             <Route path="/admin/settings" element={<AdminSettingsPage />} />
-            <Route path="/admin/profile" element={<PlaceholderPage title="Profile" />} />
+            <Route path="/admin/profile" element={<ProfilePage />} />
           </Route>
 
           <Route element={<ProtectedRoute roles={["MENTOR"]} />}>
@@ -71,7 +71,7 @@ export default function App() {
             />
             <Route path="/mentor/messages" element={<MentorMessagesPage />} />
             <Route path="/mentor/reports" element={<MentorReportsPage />} />
-            <Route path="/mentor/profile" element={<PlaceholderPage title="Profile" />} />
+            <Route path="/mentor/profile" element={<ProfilePage description="Manage your mentor account." />} />
           </Route>
 
           <Route element={<ProtectedRoute roles={["STUDENT"]} />}>

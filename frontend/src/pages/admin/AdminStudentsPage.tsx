@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react"
-import { Link } from "react-router-dom"
 import { CheckCircle2, KeyRound, MoreHorizontal, Pencil, Plus, Trash2, UserRound } from "lucide-react"
 import { toast } from "sonner"
 import { api, getErrorMessage } from "@/lib/api"
@@ -538,13 +537,9 @@ export function AdminStudentsPage() {
             <AvatarFallback>{getInitials(s.user.firstName, s.user.lastName)}</AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <Link
-              to="#"
-              onClick={(e) => e.preventDefault()}
-              className="block truncate text-sm font-medium hover:underline"
-            >
+            <p className="truncate text-sm font-medium">
               {fullName(s.user.firstName, s.user.lastName)}
-            </Link>
+            </p>
             <p className="truncate text-xs text-muted-foreground">{s.user.email}</p>
           </div>
         </div>

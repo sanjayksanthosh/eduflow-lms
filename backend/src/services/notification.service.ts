@@ -12,13 +12,24 @@ interface NotifyOptions {
 }
 
 export const createNotification = async (options: NotifyOptions): Promise<void> => {
+  // Prefix the link with the recipient's role segment (frontend routes are
+  // role-scoped, e.g. /student/announcements).
+  let link = options.link;
+  if (link) {
+    const user = await prisma.user.findUnique({
+      where: { id: options.userId },
+      select: { role: true },
+    });
+    if (user) link = `/${user.role.toLowerCase()}${link}`;
+  }
+
   await prisma.notification.create({
     data: {
       recipientId: options.userId,
       title: options.title,
       body: options.body,
       type: options.type ?? NOTIFICATION_TYPE.SYSTEM,
-      link: options.link,
+      link,
     },
   });
 
@@ -42,13 +53,27 @@ export const notifyMany = async (
   options: Omit<NotifyOptions, 'userId'>
 ): Promise<void> => {
   if (userIds.length === 0) return;
+
+  // Resolve each recipient's role so links can be prefixed correctly
+  // (frontend routes are role-scoped, e.g. /student/announcements).
+  let linkByUser = new Map<string, string | null>();
+  if (options.link) {
+    const users = await prisma.user.findMany({
+      where: { id: { in: userIds } },
+      select: { id: true, role: true },
+    });
+    linkByUser = new Map(
+      users.map((u) => [u.id, `/${u.role.toLowerCase()}${options.link}`])
+    );
+  }
+
   await prisma.notification.createMany({
     data: userIds.map((id) => ({
       recipientId: id,
       title: options.title,
       body: options.body,
       type: options.type ?? NOTIFICATION_TYPE.SYSTEM,
-      link: options.link,
+      link: options.link ? (linkByUser.get(id) ?? options.link) : undefined,
     })),
   });
 

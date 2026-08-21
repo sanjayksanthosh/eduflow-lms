@@ -34,7 +34,6 @@ export const NAV_ITEMS: Record<Role, NavEntry[]> = {
     { to: "/admin/reports", label: "Reports", icon: BarChart3 },
     { to: "/admin/activity", label: "Activity Logs", icon: Activity },
     { section: "System" },
-    { to: "/admin/messages", label: "Messages", icon: MessageSquare },
     { to: "/admin/settings", label: "Settings", icon: Settings },
   ],
   MENTOR: [
@@ -46,6 +45,8 @@ export const NAV_ITEMS: Record<Role, NavEntry[]> = {
     { to: "/mentor/messages", label: "Messages", icon: MessageSquare },
     { section: "Analytics" },
     { to: "/mentor/reports", label: "Reports", icon: BarChart3 },
+    { section: "Account" },
+    { to: "/mentor/profile", label: "My Profile", icon: Users },
   ],
   STUDENT: [
     { to: "/student", label: "Dashboard", icon: LayoutDashboard },
