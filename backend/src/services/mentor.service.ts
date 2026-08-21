@@ -9,16 +9,20 @@ import { ACTIVITY_TYPE } from '../constants/enums';
 import type { Request } from 'express';
 
 interface CreateMentorInput {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
-  password: string;
+  password?: string;
   phone?: string;
   department?: string;
   qualification?: string;
-  experience?: number;
   subjects?: string[];
 }
+
+/** Splits "First Middle Last" into { firstName, lastName } (lastName may be ''). */
+const splitFullName = (fullName: string): { firstName: string; lastName: string } => {
+  const parts = fullName.trim().split(/\s+/);
+  return { firstName: parts[0], lastName: parts.slice(1).join(' ') };
+};
 
 export const mentorList = async (query: Record<string, unknown>) => {
   const { page, limit, skip, sortOrder } = getPagination(query);
@@ -76,12 +80,18 @@ export const createMentor = async (input: CreateMentorInput) => {
   const existing = await prisma.user.findUnique({ where: { email: input.email } });
   if (existing) throw ApiError.conflict('A user with this email already exists.');
 
+  // Initial password defaults to the mentor's phone number.
+  const initialPassword = input.password ?? input.phone;
+  if (!initialPassword) throw ApiError.badRequest('Phone number is required (used as the initial password).');
+
+  const { firstName, lastName } = splitFullName(input.fullName);
+
   const user = await prisma.user.create({
     data: {
       email: input.email,
-      passwordHash: await hashPassword(input.password),
-      firstName: input.firstName,
-      lastName: input.lastName,
+      passwordHash: await hashPassword(initialPassword),
+      firstName,
+      lastName,
       phone: input.phone,
       role: 'MENTOR',
       status: 'ACTIVE',
@@ -89,7 +99,6 @@ export const createMentor = async (input: CreateMentorInput) => {
         create: {
           department: input.department,
           qualification: input.qualification,
-          experience: input.experience,
           subjects: input.subjects ?? [],
         },
       },
@@ -100,9 +109,9 @@ export const createMentor = async (input: CreateMentorInput) => {
     to: user.email,
     subject: 'Welcome to EduFlow!',
     html: emailTemplates.welcome(
-      `${user.firstName} ${user.lastName}`,
+      `${user.firstName} ${user.lastName}`.trim(),
       user.email,
-      input.password,
+      initialPassword,
       'Mentor'
     ),
   });
@@ -147,11 +156,14 @@ export const updateMentor = async (mentorId: string, input: Record<string, unkno
   const mentor = await prisma.mentor.findUnique({ where: { id: mentorId } });
   if (!mentor) throw ApiError.notFound('Mentor not found.');
 
+  const nameData: { firstName?: string; lastName?: string } = input.fullName
+    ? splitFullName(input.fullName as string)
+    : {};
   await prisma.user.update({
     where: { id: mentor.userId },
     data: {
-      firstName: input.firstName as string | undefined,
-      lastName: input.lastName as string | undefined,
+      firstName: (nameData.firstName ?? input.firstName) as string | undefined,
+      lastName: ('lastName' in nameData ? nameData.lastName : input.lastName) as string | undefined,
       phone: input.phone as string | undefined,
     },
   });
@@ -161,7 +173,6 @@ export const updateMentor = async (mentorId: string, input: Record<string, unkno
     data: {
       department: input.department as string | undefined,
       qualification: input.qualification as string | undefined,
-      experience: input.experience as number | undefined,
       subjects: input.subjects as string[] | undefined,
     },
     include: { user: true, batches: true },
@@ -185,18 +196,54 @@ export const deleteMentor = async (mentorId: string, req?: Request) => {
     include: { user: { select: { firstName: true, lastName: true } } },
   });
   if (!mentor) throw ApiError.notFound('Mentor not found.');
+  const userId = mentor.userId;
 
+  // Detach batches
   await prisma.batch.updateMany({
     where: { mentorId },
     data: { mentorId: null },
   });
 
-  await prisma.user.delete({ where: { id: mentor.userId } });
+  // Delete assignments they created (with submissions)
+  const assignments = await prisma.assignment.findMany({
+    where: { mentorId },
+    select: { id: true },
+  });
+  if (assignments.length > 0) {
+    await prisma.assignmentSubmission.deleteMany({
+      where: { assignmentId: { in: assignments.map((a) => a.id) } },
+    });
+    await prisma.assignment.deleteMany({ where: { mentorId } });
+  }
+
+  // Attendance rows tied to their mentorship; records they marked are kept
+  // and attributed to the acting admin (markedById is a required relation).
+  if (req?.user?.id) {
+    await prisma.attendance.updateMany({
+      where: { markedById: userId },
+      data: { markedById: req.user.id },
+    });
+  }
+  await prisma.attendance.deleteMany({ where: { mentorId } });
+
+  // Announcements authored by them
+  await prisma.announcement.deleteMany({ where: { authorId: userId } });
+
+  // Notifications, messages, activity logs, password resets
+  await prisma.notification.deleteMany({ where: { recipientId: userId } });
+  await prisma.message.deleteMany({
+    where: { OR: [{ senderId: userId }, { recipientId: userId }] },
+  });
+  await prisma.activityLog.deleteMany({ where: { userId } });
+  await prisma.passwordReset.deleteMany({ where: { userId } });
+
+  await prisma.mentor.delete({ where: { id: mentorId } });
+  await prisma.user.delete({ where: { id: userId } });
 
   await logActivity({
     userId: req?.user?.id,
     type: ACTIVITY_TYPE.DELETE,
-    action: `Deleted mentor ${mentor.user.firstName} ${mentor.user.lastName}`,
+    action: `Deleted mentor ${mentor.user.firstName} ${mentor.user.lastName}`.trim(),
   });
   return { id: mentorId, message: 'Mentor deleted.' };
 };

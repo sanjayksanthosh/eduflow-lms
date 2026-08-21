@@ -63,25 +63,26 @@ export const resetPasswordSchema = z.object({
 });
 
 // ---------------- Mentor ----------------
-export const createMentorSchema = z.object({
-  firstName: z.string().trim().min(1, 'First name is required'),
-  lastName: z.string().trim().min(1, 'Last name is required'),
-  email: z.string().trim().toLowerCase().email('A valid email is required'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  phone: z.string().optional(),
-  department: z.string().optional(),
-  qualification: z.string().optional(),
-  experience: z.coerce.number().int().min(0).optional(),
-  subjects: z.array(z.string()).optional(),
-});
+export const createMentorSchema = z
+  .object({
+    fullName: z.string().trim().min(2, 'Full name is required'),
+    email: z.string().trim().toLowerCase().email('A valid email is required'),
+    password: z.string().min(6, 'Password must be at least 6 characters').optional(),
+    phone: z.string().optional(),
+    department: z.string().optional(),
+    qualification: z.string().optional(),
+    subjects: z.array(z.string()).optional(),
+  })
+  .refine((data) => Boolean(data.password || data.phone), {
+    message: 'Phone number is required (used as the initial password)',
+    path: ['phone'],
+  });
 
 export const updateMentorSchema = z.object({
-  firstName: z.string().trim().min(1).optional(),
-  lastName: z.string().trim().min(1).optional(),
+  fullName: z.string().trim().min(2).optional(),
   phone: z.string().optional(),
   department: z.string().optional(),
   qualification: z.string().optional(),
-  experience: z.coerce.number().int().min(0).optional(),
   subjects: z.array(z.string()).optional(),
 });
 

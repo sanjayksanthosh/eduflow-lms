@@ -42,22 +42,20 @@ import type { Mentor } from "@/lib/types"
 const PAGE_SIZE = 10
 
 interface MentorFormState {
-  firstName: string
-  lastName: string
+  fullName: string
   email: string
-  password: string
   phone: string
-  experience: string
+  department: string
+  qualification: string
   subjects: string
 }
 
 const emptyForm: MentorFormState = {
-  firstName: "",
-  lastName: "",
+  fullName: "",
   email: "",
-  password: "",
   phone: "",
-  experience: "",
+  department: "",
+  qualification: "",
   subjects: "",
 }
 
@@ -81,12 +79,11 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
     setForm(
       mentor
         ? {
-            firstName: mentor.user.firstName,
-            lastName: mentor.user.lastName,
+            fullName: fullName(mentor.user.firstName, mentor.user.lastName),
             email: mentor.user.email,
-            password: "",
             phone: mentor.user.phone ?? "",
-            experience: mentor.experience != null ? String(mentor.experience) : "",
+            department: mentor.department ?? "",
+            qualification: mentor.qualification ?? "",
             subjects: mentor.subjects?.join(", ") ?? "",
           }
         : emptyForm
@@ -94,19 +91,20 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
   }, [open, mentor])
 
   const handleSubmit = async () => {
-    if (!form.firstName.trim() || !form.lastName.trim() || !form.email.trim()) {
-      toast.error("Name and email are required.")
+    if (!form.fullName.trim() || !form.email.trim()) {
+      toast.error("Full name and email are required.")
       return
     }
-    if (!isEdit && form.password.length < 8) {
-      toast.error("Password must be at least 8 characters.")
+    if (!isEdit && !form.phone.trim()) {
+      toast.error("Phone number is required — it is used as the initial password.")
       return
     }
     setSubmitting(true)
     try {
       const common = {
         phone: form.phone.trim() || undefined,
-        experience: form.experience.trim() ? Number(form.experience) : undefined,
+        department: form.department.trim() || undefined,
+        qualification: form.qualification.trim() || undefined,
         subjects: form.subjects.trim()
           ? form.subjects
               .split(",")
@@ -116,20 +114,17 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
       }
       if (isEdit) {
         await api.patch(`/admin/mentors/${mentor!.id}`, {
-          firstName: form.firstName,
-          lastName: form.lastName,
+          fullName: form.fullName.trim(),
           ...common,
         })
         toast.success("Mentor updated.")
       } else {
         await api.post("/admin/mentors", {
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          password: form.password,
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
           ...common,
         })
-        toast.success("Mentor created.")
+        toast.success("Mentor created. Initial password is their phone number.")
       }
       onOpenChange(false)
       onSaved()
@@ -147,25 +142,16 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
           <DialogTitle>{isEdit ? "Edit Mentor" : "Add Mentor"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First name</Label>
-              <Input
-                id="firstName"
-                value={form.firstName}
-                onChange={(e) => set("firstName", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last name</Label>
-              <Input
-                id="lastName"
-                value={form.lastName}
-                onChange={(e) => set("lastName", e.target.value)}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="fullName">Full name</Label>
+            <Input
+              id="fullName"
+              value={form.fullName}
+              placeholder="e.g. Priya Sharma"
+              onChange={(e) => set("fullName", e.target.value)}
+            />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -177,29 +163,38 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">{isEdit ? "Password" : "Password *"}</Label>
+              <Label htmlFor="phone">Phone number</Label>
               <Input
-                id="password"
-                type="password"
-                value={form.password}
-                placeholder={isEdit ? "Leave blank to keep current" : "Min 8 characters"}
-                onChange={(e) => set("password", e.target.value)}
+                id="phone"
+                type="tel"
+                value={form.phone}
+                placeholder="e.g. 9876543210"
+                onChange={(e) => set("phone", e.target.value)}
               />
+              {!isEdit ? (
+                <p className="text-xs text-muted-foreground">
+                  Used to log in — the phone number is set as the initial password.
+                </p>
+              ) : null}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
+              <Label htmlFor="department">Department</Label>
+              <Input
+                id="department"
+                value={form.department}
+                placeholder="e.g. Computer Science"
+                onChange={(e) => set("department", e.target.value)}
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="experience">Years of experience</Label>
+              <Label htmlFor="qualification">Qualification</Label>
               <Input
-                id="experience"
-                type="number"
-                min={0}
-                value={form.experience}
-                onChange={(e) => set("experience", e.target.value)}
+                id="qualification"
+                value={form.qualification}
+                placeholder="e.g. M.Tech CSE"
+                onChange={(e) => set("qualification", e.target.value)}
               />
             </div>
           </div>
