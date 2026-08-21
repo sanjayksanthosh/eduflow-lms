@@ -138,7 +138,7 @@ export function MentorReportsPage() {
     <div className="space-y-6">
       <PageHeader title="Reports" description="Student performance reports across your batches." />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Students" value={data?.totalStudents ?? 0} icon={Users} />
         <StatCard title="Batches" value={data?.batches.length ?? 0} icon={BookOpen} />
         <StatCard title="Avg Attendance" value={`${avgAttendance}%`} icon={BarChart3} />

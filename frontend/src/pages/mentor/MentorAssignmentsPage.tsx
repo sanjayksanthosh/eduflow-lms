@@ -162,7 +162,7 @@ export function MentorAssignmentsPage() {
           }
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {assignments?.map((assignment) => (
             <Card key={assignment.id} className="transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
               <CardContent className="space-y-3 p-6">

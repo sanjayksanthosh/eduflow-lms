@@ -115,7 +115,7 @@ export function StudentAttendancePage() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Attendance" value={`${data?.attendancePercent ?? 0}%`} icon={CalendarCheck} />
         <StatCard title="Present" value={present} icon={CalendarCheck} hint={`of ${data?.total ?? 0} records`} />
         <StatCard title="Late" value={summary.LATE ?? 0} icon={Clock} />

@@ -77,7 +77,7 @@ export function MentorDashboardPage() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="My Batches" value={stats.batches} icon={BookOpen} to="/mentor/batches" />
         <StatCard title="Total Students" value={stats.totalStudents} icon={Users} to="/mentor/batches" />
         <StatCard

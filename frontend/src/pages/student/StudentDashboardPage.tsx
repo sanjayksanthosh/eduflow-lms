@@ -76,7 +76,7 @@ export function StudentDashboardPage() {
         description={batch ? `${batch.name} (${batch.code})` : "Your learning overview."}
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Attendance" value={`${stats.attendancePercent}%`} icon={CalendarCheck} to="/student/attendance" />
         <StatCard
           title="Attendance Today"

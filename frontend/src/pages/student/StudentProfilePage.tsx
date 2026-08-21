@@ -142,7 +142,7 @@ export function StudentProfilePage() {
             </div>
           </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="stagger mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <SummaryTile
               label="Attendance"
               value={`${profile?.stats.attendancePercent ?? 0}%`}

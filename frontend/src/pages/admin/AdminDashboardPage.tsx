@@ -53,7 +53,7 @@ export function AdminDashboardPage() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Total Students" value={stats.totalStudents} icon={Users} to="/admin/students" />
         <StatCard title="Total Mentors" value={stats.totalMentors} icon={UserCheck} to="/admin/mentors" />
         <StatCard title="Batches" value={stats.totalBatches} icon={BookOpen} to="/admin/batches" />

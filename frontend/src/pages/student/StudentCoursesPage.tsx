@@ -85,7 +85,7 @@ export function StudentCoursesPage() {
           description="Courses you are enrolled in will appear here."
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {courses?.map((course) => {
             const percent =
               course.totalLessons === 0 ? 0 : Math.round((course.completedLessons / course.totalLessons) * 100)

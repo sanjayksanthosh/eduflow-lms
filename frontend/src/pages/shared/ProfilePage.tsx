@@ -162,7 +162,7 @@ export function ProfilePage({ description }: { description?: string }) {
             <CardTitle className="text-base">Personal Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="stagger grid gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
                 <Label htmlFor="firstName">First name</Label>
                 <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />

@@ -188,7 +188,7 @@ export function MentorMessagesPage() {
       ) : (
         <Card>
           <CardContent className="p-4">
-            <div className="max-h-[55vh] space-y-3 overflow-y-auto pr-1">
+            <div className="max-h-[55dvh] space-y-3 overflow-y-auto pr-1">
               {messages.map((message) => {
                 const isMine = message.sender.id === user?.id
                 const isPrivate = message.recipientId !== null
