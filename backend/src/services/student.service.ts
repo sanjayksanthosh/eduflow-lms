@@ -10,20 +10,24 @@ import { ACTIVITY_TYPE } from '../constants/enums';
 import type { Request } from 'express';
 
 interface CreateStudentInput {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
-  password: string;
+  password?: string;
   phone?: string;
   address?: string;
   gender?: string;
   dateOfBirth?: string;
-  admissionNumber?: string;
   parentName?: string;
   parentPhone?: string;
   emergencyContact?: string;
   batchId?: string;
 }
+
+/** Splits "First Middle Last" into { firstName, lastName } (lastName may be ''). */
+const splitFullName = (fullName: string): { firstName: string; lastName: string } => {
+  const parts = fullName.trim().split(/\s+/);
+  return { firstName: parts[0], lastName: parts.slice(1).join(' ') };
+};
 
 export const studentList = async (query: Record<string, unknown>) => {
   const { page, limit, skip, sortOrder } = getPagination(query);
@@ -103,15 +107,21 @@ export const createStudent = async (input: CreateStudentInput) => {
     if (!batch) throw ApiError.notFound('Batch not found.');
   }
 
-  const password = input.password;
-  const admissionNumber = input.admissionNumber || (await generateAdmissionNumber());
+  const password = input.password || input.phone;
+  if (!password) {
+    throw ApiError.badRequest(
+      'Phone number is required — it is used as the initial password.'
+    );
+  }
+  const admissionNumber = await generateAdmissionNumber();
+  const { firstName, lastName } = splitFullName(input.fullName);
 
   const user = await prisma.user.create({
     data: {
       email: input.email,
       passwordHash: await hashPassword(password),
-      firstName: input.firstName,
-      lastName: input.lastName,
+      firstName,
+      lastName,
       phone: input.phone,
       address: input.address,
       role: 'STUDENT',
@@ -210,9 +220,12 @@ export const updateStudent = async (studentId: string, input: Record<string, unk
   const student = await prisma.student.findUnique({ where: { id: studentId } });
   if (!student) throw ApiError.notFound('Student not found.');
 
+  const nameData: { firstName?: string; lastName?: string } =
+    input.fullName !== undefined ? splitFullName(input.fullName as string) : {};
+
   const userData = {
-    firstName: input.firstName as string | undefined,
-    lastName: input.lastName as string | undefined,
+    firstName: nameData.firstName,
+    lastName: nameData.lastName,
     phone: input.phone as string | undefined,
     address: input.address as string | undefined,
   };
@@ -334,8 +347,23 @@ export const updateStudentProfileImage = async (
 export const deleteStudent = async (studentId: string, req?: Request) => {
   const student = await prisma.student.findUnique({ where: { id: studentId } });
   if (!student) throw ApiError.notFound('Student not found.');
+  const userId = student.userId;
 
-  await prisma.user.delete({ where: { id: student.userId } });
+  await prisma.lessonProgress.deleteMany({ where: { studentId } });
+  await prisma.assignmentSubmission.deleteMany({ where: { studentId } });
+  await prisma.attendance.deleteMany({ where: { studentId } });
+  await prisma.courseEnrollment.deleteMany({ where: { studentId } });
+  await prisma.announcement.updateMany({
+    where: { studentId: userId },
+    data: { studentId: null },
+  });
+  await prisma.message.deleteMany({ where: { OR: [{ senderId: userId }, { recipientId: userId }] } });
+  await prisma.notification.deleteMany({ where: { recipientId: userId } });
+  await prisma.activityLog.updateMany({ where: { userId }, data: { userId: null } });
+  await prisma.passwordReset.deleteMany({ where: { userId } });
+
+  await prisma.student.delete({ where: { id: studentId } });
+  await prisma.user.delete({ where: { id: userId } });
 
   await logActivity({
     userId: req?.user?.id,

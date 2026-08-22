@@ -22,25 +22,27 @@ export const dateRangeSchema = z.object({
 });
 
 // ---------------- Student ----------------
-export const createStudentSchema = z.object({
-  firstName: z.string().trim().min(1, 'First name is required'),
-  lastName: z.string().trim().min(1, 'Last name is required'),
-  email: z.string().trim().toLowerCase().email('A valid email is required'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-  gender: z.enum([GENDERS.MALE, GENDERS.FEMALE, GENDERS.OTHER]).optional(),
-  dateOfBirth: z.string().optional(),
-  admissionNumber: z.string().trim().optional(),
-  parentName: z.string().optional(),
-  parentPhone: z.string().optional(),
-  emergencyContact: z.string().optional(),
-  batchId: z.string().optional(),
-});
+export const createStudentSchema = z
+  .object({
+    fullName: z.string().trim().min(1, 'Full name is required'),
+    email: z.string().trim().toLowerCase().email('A valid email is required'),
+    password: z.string().min(8, 'Password must be at least 8 characters').optional(),
+    phone: z.string().trim().optional(),
+    address: z.string().optional(),
+    gender: z.enum([GENDERS.MALE, GENDERS.FEMALE, GENDERS.OTHER]).optional(),
+    dateOfBirth: z.string().optional(),
+    parentName: z.string().optional(),
+    parentPhone: z.string().optional(),
+    emergencyContact: z.string().optional(),
+    batchId: z.string().optional(),
+  })
+  .refine((data) => Boolean(data.password || data.phone), {
+    message: 'Phone number is required when no password is provided',
+    path: ['phone'],
+  });
 
 export const updateStudentSchema = z.object({
-  firstName: z.string().trim().min(1).optional(),
-  lastName: z.string().trim().min(1).optional(),
+  fullName: z.string().trim().min(1).optional(),
   phone: z.string().optional(),
   address: z.string().optional(),
   gender: z.enum([GENDERS.MALE, GENDERS.FEMALE, GENDERS.OTHER]).optional(),

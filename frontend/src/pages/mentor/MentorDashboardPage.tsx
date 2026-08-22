@@ -1,4 +1,4 @@
-import { CalendarCheck, ClipboardCheck, Users, BookOpen, Plus } from "lucide-react"
+import { CalendarCheck, ClipboardCheck, Users, BookOpen, Plus, Clock, CalendarDays } from "lucide-react"
 import { Link } from "react-router-dom"
 import { PageHeader } from "@/components/shared/PageHeader"
 import { StatCard } from "@/components/shared/StatCard"
@@ -15,6 +15,8 @@ interface MentorBatchRow {
   id: string
   name: string
   code: string
+  classDays?: number[]
+  classTime?: string | null
   course: { id: string; title: string; color: string | null }
   _count: { students: number }
 }
@@ -63,6 +65,16 @@ export function MentorDashboardPage() {
 
   const { stats, batches, assignments, announcements, progressData } = data
 
+  const todayIndex = new Date().getDay()
+  const todayClasses = batches
+    .filter((batch) => (batch.classDays ?? []).includes(todayIndex))
+    .sort((a, b) => (a.classTime ?? "99:99").localeCompare(b.classTime ?? "99:99"))
+  const dayLabel = new Date().toLocaleDateString(undefined, {
+    weekday: "long",
+    day: "numeric",
+    month: "short",
+  })
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -76,6 +88,51 @@ export function MentorDashboardPage() {
           </Link>
         }
       />
+
+      <Card className="animate-page overflow-hidden border-primary/25">
+        <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <CalendarDays className="size-4 text-primary" />
+            Today&apos;s Schedule
+          </CardTitle>
+          <Badge variant="secondary">{dayLabel}</Badge>
+        </CardHeader>
+        <CardContent>
+          {todayClasses.length === 0 ? (
+            <p className="flex items-center gap-2 py-2 text-sm text-muted-foreground">
+              <Clock className="size-4" />
+              No classes scheduled for today. Enjoy the free day!
+            </p>
+          ) : (
+            <ul className="space-y-2.5">
+              {todayClasses.map((batch) => (
+                <li key={batch.id}>
+                  <Link
+                    to="/mentor/batches"
+                    className="flex items-center gap-3 rounded-lg border bg-muted/30 px-3 py-2.5 transition-colors hover:border-primary/40 hover:bg-muted/60"
+                  >
+                    <span className="flex shrink-0 items-center gap-1.5 rounded-md bg-primary/10 px-2 py-1 text-sm font-semibold text-primary">
+                      <Clock className="size-3.5" />
+                      {batch.classTime || "—"}
+                    </span>
+                    <span
+                      className="inline-block size-2.5 shrink-0 rounded-full"
+                      style={{ background: batch.course.color ?? "#6366f1" }}
+                    />
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium">{batch.name}</span>
+                    <span className="hidden truncate text-xs text-muted-foreground sm:block">
+                      {batch.course.title}
+                    </span>
+                    <Badge variant="outline" className="shrink-0">
+                      {batch._count.students} student{batch._count.students === 1 ? "" : "s"}
+                    </Badge>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="My Batches" value={stats.batches} icon={BookOpen} to="/mentor/batches" />

@@ -170,6 +170,18 @@ export const deleteBatch = async (batchId: string) => {
   const batch = await prisma.batch.findUnique({ where: { id: batchId } });
   if (!batch) throw ApiError.notFound('Batch not found.');
 
+  const assignments = await prisma.assignment.findMany({
+    where: { batchId },
+    select: { id: true },
+  });
+  const assignmentIds = assignments.map((a) => a.id);
+  if (assignmentIds.length > 0) {
+    await prisma.assignmentSubmission.deleteMany({ where: { assignmentId: { in: assignmentIds } } });
+    await prisma.assignment.deleteMany({ where: { id: { in: assignmentIds } } });
+  }
+  await prisma.attendance.deleteMany({ where: { batchId } });
+  await prisma.announcement.updateMany({ where: { batchId }, data: { batchId: null } });
+  await prisma.message.deleteMany({ where: { batchId } });
   await prisma.student.updateMany({
     where: { batchId },
     data: { batchId: null },

@@ -44,15 +44,13 @@ const PAGE_SIZE = 10
 const GENDERS = ["MALE", "FEMALE", "OTHER"]
 
 interface StudentFormState {
-  firstName: string
-  lastName: string
+  fullName: string
   email: string
   password: string
   phone: string
   address: string
   gender: string
   dateOfBirth: string
-  admissionNumber: string
   parentName: string
   parentPhone: string
   emergencyContact: string
@@ -60,15 +58,13 @@ interface StudentFormState {
 }
 
 const emptyForm: StudentFormState = {
-  firstName: "",
-  lastName: "",
+  fullName: "",
   email: "",
   password: "",
   phone: "",
   address: "",
   gender: "",
   dateOfBirth: "",
-  admissionNumber: "",
   parentName: "",
   parentPhone: "",
   emergencyContact: "",
@@ -108,15 +104,13 @@ function StudentFormDialog({ open, onOpenChange, student, batches, onSaved }: St
     setForm(
       student
         ? {
-            firstName: student.user.firstName,
-            lastName: student.user.lastName,
+            fullName: fullName(student.user.firstName, student.user.lastName),
             email: student.user.email,
             password: "",
             phone: student.user.phone ?? "",
             address: student.user.address ?? "",
             gender: student.gender ?? "",
             dateOfBirth: student.dateOfBirth ? student.dateOfBirth.slice(0, 10) : "",
-            admissionNumber: student.admissionNumber,
             parentName: student.parentName ?? "",
             parentPhone: student.parentPhone ?? "",
             emergencyContact: student.emergencyContact ?? "",
@@ -127,12 +121,12 @@ function StudentFormDialog({ open, onOpenChange, student, batches, onSaved }: St
   }, [open, student])
 
   const handleSubmit = async () => {
-    if (!form.firstName.trim() || !form.lastName.trim() || !form.email.trim()) {
-      toast.error("Name and email are required.")
+    if (!form.fullName.trim() || !form.email.trim()) {
+      toast.error("Full name and email are required.")
       return
     }
-    if (!isEdit && form.password.length < 8) {
-      toast.error("Password must be at least 8 characters.")
+    if (!isEdit && !form.password && !form.phone.trim()) {
+      toast.error("Phone number is required — it is used as the initial password.")
       return
     }
     setSubmitting(true)
@@ -140,8 +134,7 @@ function StudentFormDialog({ open, onOpenChange, student, batches, onSaved }: St
       if (isEdit) {
         await api.patch(`/admin/students/${student!.id}`, {
           ...cleanOptional({
-            firstName: form.firstName,
-            lastName: form.lastName,
+            fullName: form.fullName,
             phone: form.phone,
             address: form.address,
             gender: form.gender,
@@ -154,23 +147,25 @@ function StudentFormDialog({ open, onOpenChange, student, batches, onSaved }: St
         toast.success("Student updated.")
       } else {
         await api.post("/admin/students", {
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          password: form.password,
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          ...(form.password.trim() ? { password: form.password } : {}),
           ...cleanOptional({
             phone: form.phone,
             address: form.address,
             gender: form.gender,
             dateOfBirth: form.dateOfBirth,
-            admissionNumber: form.admissionNumber,
             parentName: form.parentName,
             parentPhone: form.parentPhone,
             emergencyContact: form.emergencyContact,
             batchId: form.batchId,
           }),
         })
-        toast.success("Student created.")
+        toast.success(
+          form.password.trim()
+            ? "Student created."
+            : "Student created. Initial password is their phone number."
+        )
       }
       onOpenChange(false)
       onSaved()
@@ -188,25 +183,16 @@ function StudentFormDialog({ open, onOpenChange, student, batches, onSaved }: St
           <DialogTitle>{isEdit ? "Edit Student" : "Add Student"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First name</Label>
-              <Input
-                id="firstName"
-                value={form.firstName}
-                onChange={(e) => set("firstName", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last name</Label>
-              <Input
-                id="lastName"
-                value={form.lastName}
-                onChange={(e) => set("lastName", e.target.value)}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="fullName">Full name</Label>
+            <Input
+              id="fullName"
+              value={form.fullName}
+              placeholder="e.g. Arjun Menon"
+              onChange={(e) => set("fullName", e.target.value)}
+            />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -218,33 +204,33 @@ function StudentFormDialog({ open, onOpenChange, student, batches, onSaved }: St
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">
-                {isEdit ? "Password" : "Password *"}
-              </Label>
+              <Label htmlFor="phone">Phone number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={form.phone}
+                placeholder="e.g. 9876543210"
+                onChange={(e) => set("phone", e.target.value)}
+              />
+              {!isEdit ? (
+                <p className="text-xs text-muted-foreground">
+                  Used to log in — the phone number is set as the initial password.
+                </p>
+              ) : null}
+            </div>
+          </div>
+          {!isEdit ? (
+            <div className="space-y-2">
+              <Label htmlFor="password">Password (optional)</Label>
               <Input
                 id="password"
                 type="password"
                 value={form.password}
-                placeholder={isEdit ? "Leave blank to keep current" : "Min 8 characters"}
+                placeholder="Leave blank to use the phone number"
                 onChange={(e) => set("password", e.target.value)}
               />
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="admission">Admission number</Label>
-              <Input
-                id="admission"
-                value={form.admissionNumber}
-                placeholder="Auto-generated"
-                onChange={(e) => set("admissionNumber", e.target.value)}
-              />
-            </div>
-          </div>
+          ) : null}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Gender</Label>
