@@ -41,29 +41,37 @@ import type { Batch, BatchDetail, Course, Mentor, Student } from "@/lib/types"
 
 const PAGE_SIZE = 10
 const BATCH_STATUSES = ["ACTIVE", "COMPLETED", "ARCHIVED"]
+const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"]
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
 interface BatchFormState {
   name: string
-  code: string
   courseId: string
   mentorId: string
   startDate: string
-  endDate: string
   capacity: string
   status: string
   description: string
+  classDays: number[]
+  classTime: string
 }
 
 const emptyForm: BatchFormState = {
   name: "",
-  code: "",
   courseId: "",
   mentorId: "",
   startDate: "",
-  endDate: "",
   capacity: "30",
   status: "ACTIVE",
   description: "",
+  classDays: [],
+  classTime: "",
+}
+
+function formatClassSchedule(classDays?: number[], classTime?: string | null): string {
+  if (!classDays || classDays.length === 0) return ""
+  const days = [...classDays].sort().map((d) => DAY_NAMES[d] ?? String(d)).join(", ")
+  return classTime ? `${days} · ${classTime}` : days
 }
 
 interface BatchFormDialogProps {
@@ -89,36 +97,44 @@ function BatchFormDialog({ open, onOpenChange, batch, courses, mentors, onSaved 
       batch
         ? {
             name: batch.name,
-            code: batch.code,
             courseId: batch.courseId,
             mentorId: batch.mentorId ?? "",
             startDate: batch.startDate ? batch.startDate.slice(0, 10) : "",
-            endDate: batch.endDate ? batch.endDate.slice(0, 10) : "",
             capacity: String(batch.capacity),
             status: batch.status,
             description: batch.description ?? "",
+            classDays: (batch.classDays as number[] | undefined) ?? [],
+            classTime: batch.classTime ?? "",
           }
         : emptyForm
     )
   }, [open, batch])
 
+  const toggleDay = (day: number) =>
+    setForm((prev) => ({
+      ...prev,
+      classDays: prev.classDays.includes(day)
+        ? prev.classDays.filter((d) => d !== day)
+        : [...prev.classDays, day],
+    }))
+
   const handleSubmit = async () => {
-    if (!form.name.trim() || !form.code.trim() || !form.courseId) {
-      toast.error("Name, code and course are required.")
+    if (!form.name.trim() || !form.courseId) {
+      toast.error("Name and course are required.")
       return
     }
     setSubmitting(true)
     try {
       const payload = {
         name: form.name,
-        code: form.code,
         courseId: form.courseId,
         capacity: Number(form.capacity) || 30,
         status: form.status,
         ...(form.mentorId ? { mentorId: form.mentorId } : {}),
         ...(form.startDate ? { startDate: form.startDate } : {}),
-        ...(form.endDate ? { endDate: form.endDate } : {}),
         ...(form.description.trim() ? { description: form.description } : {}),
+        classDays: form.classDays,
+        ...(form.classTime ? { classTime: form.classTime } : {}),
       }
       if (isEdit) {
         await api.patch(`/admin/batches/${batch!.id}`, payload)
@@ -143,15 +159,9 @@ function BatchFormDialog({ open, onOpenChange, batch, courses, mentors, onSaved 
           <DialogTitle>{isEdit ? "Edit Batch" : "Create Batch"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Batch name</Label>
-              <Input id="name" value={form.name} onChange={(e) => set("name", e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="code">Code</Label>
-              <Input id="code" value={form.code} onChange={(e) => set("code", e.target.value)} />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="name">Batch name</Label>
+            <Input id="name" value={form.name} placeholder="e.g. Morning Batch A" onChange={(e) => set("name", e.target.value)} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -186,7 +196,47 @@ function BatchFormDialog({ open, onOpenChange, batch, courses, mentors, onSaved 
               </Select>
             </div>
           </div>
+          <div className="space-y-2">
+            <Label>Class days</Label>
+            <div className="flex justify-between gap-1.5">
+              {DAY_LABELS.map((label, day) => {
+                const active = form.classDays.includes(day)
+                return (
+                  <button
+                    key={day}
+                    type="button"
+                    onClick={() => toggleDay(day)}
+                    aria-pressed={active}
+                    aria-label={DAY_NAMES[day]}
+                    className={`flex size-11 shrink-0 items-center justify-center rounded-full border text-sm font-medium transition-all active:scale-95 ${
+                      active
+                        ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                        : "bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                )
+              })}
+            </div>
+            {form.classDays.length > 0 ? (
+              <p className="text-xs text-muted-foreground">
+                Every {form.classDays.slice().sort().map((d) => DAY_NAMES[d]).join(", ")}
+              </p>
+            ) : (
+              <p className="text-xs text-muted-foreground">Tap days when this batch meets.</p>
+            )}
+          </div>
           <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="classTime">Class time</Label>
+              <Input
+                id="classTime"
+                type="time"
+                value={form.classTime}
+                onChange={(e) => set("classTime", e.target.value)}
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="start">Start date</Label>
               <Input
@@ -194,15 +244,6 @@ function BatchFormDialog({ open, onOpenChange, batch, courses, mentors, onSaved 
                 type="date"
                 value={form.startDate}
                 onChange={(e) => set("startDate", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="end">End date</Label>
-              <Input
-                id="end"
-                type="date"
-                value={form.endDate}
-                onChange={(e) => set("endDate", e.target.value)}
               />
             </div>
           </div>
@@ -357,10 +398,15 @@ function BatchDetailDialog({ batchId, onClose, onSaved }: BatchDetailDialogProps
                 <StatusBadge status={detail.status} />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Period</p>
+                <p className="text-xs text-muted-foreground">Schedule</p>
                 <p className="text-sm font-medium">
-                  {formatDate(detail.startDate)} – {formatDate(detail.endDate)}
+                  {formatClassSchedule(detail.classDays as number[] | undefined, detail.classTime) ||
+                    "—"}
                 </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Started</p>
+                <p className="text-sm font-medium">{formatDate(detail.startDate)}</p>
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Capacity</p>
@@ -556,13 +602,17 @@ export function AdminBatchesPage() {
       ),
     },
     {
-      key: "period",
-      header: "Period",
-      cell: (b) => (
-        <span className="text-sm">
-          {formatDate(b.startDate)} – {formatDate(b.endDate)}
-        </span>
-      ),
+      key: "schedule",
+      header: "Schedule",
+      cell: (b) => {
+        const schedule = formatClassSchedule(b.classDays as number[] | undefined, b.classTime)
+        return (
+          <div className="text-sm">
+            <p>{schedule || "—"}</p>
+            <p className="text-xs text-muted-foreground">From {formatDate(b.startDate)}</p>
+          </div>
+        )
+      },
     },
     {
       key: "status",

@@ -37,12 +37,28 @@ export const batchList = async (query: Record<string, unknown>) => {
   return { data: batches, meta: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 } };
 };
 
+const generateBatchCode = async (course: { code: string }) => {
+  const prefix = (course.code || 'BATCH').replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 6);
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
+    const code = `${prefix}-${suffix}`;
+    const existing = await prisma.batch.findUnique({ where: { code } });
+    if (!existing) return code;
+  }
+  return `${prefix}-${Date.now().toString(36).toUpperCase()}`;
+};
+
 export const createBatch = async (input: Record<string, unknown>) => {
   const course = await prisma.course.findUnique({ where: { id: input.courseId as string } });
   if (!course) throw ApiError.notFound('Course not found.');
 
-  const existing = await prisma.batch.findUnique({ where: { code: input.code as string } });
-  if (existing) throw ApiError.conflict('A batch with this code already exists.');
+  let code = (input.code as string)?.trim();
+  if (code) {
+    const existing = await prisma.batch.findUnique({ where: { code } });
+    if (existing) throw ApiError.conflict('A batch with this code already exists.');
+  } else {
+    code = await generateBatchCode(course);
+  }
 
   if (input.mentorId) {
     const mentor = await prisma.mentor.findUnique({ where: { id: input.mentorId as string } });
@@ -52,7 +68,7 @@ export const createBatch = async (input: Record<string, unknown>) => {
   return prisma.batch.create({
     data: {
       name: input.name as string,
-      code: input.code as string,
+      code,
       courseId: input.courseId as string,
       mentorId: (input.mentorId as string) ?? null,
       startDate: input.startDate ? new Date(input.startDate as string) : undefined,
@@ -60,6 +76,10 @@ export const createBatch = async (input: Record<string, unknown>) => {
       capacity: (input.capacity as number) ?? 30,
       status: (input.status as string) ?? 'ACTIVE',
       description: (input.description as string) ?? undefined,
+      classDays: Array.isArray(input.classDays)
+        ? [...new Set((input.classDays as unknown[]).map(Number))].sort()
+        : [],
+      classTime: (input.classTime as string) || undefined,
     },
     include: { course: true, mentor: { include: { user: true } } },
   });
@@ -137,6 +157,10 @@ export const updateBatch = async (batchId: string, input: Record<string, unknown
       capacity: input.capacity as number | undefined,
       status: input.status as string | undefined,
       description: input.description as string | undefined,
+      classDays: Array.isArray(input.classDays)
+        ? [...new Set((input.classDays as unknown[]).map(Number))].sort()
+        : undefined,
+      classTime: input.classTime !== undefined ? ((input.classTime as string) || null) : undefined,
     },
     include: { course: true, mentor: { include: { user: true } } },
   });

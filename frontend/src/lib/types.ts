@@ -130,6 +130,8 @@ export interface Batch {
   status: string
   courseId: string
   mentorId: string | null
+  classDays: number[]
+  classTime: string | null
   createdAt: string
   course: BatchCourse
   mentor: { id: string; user: { firstName: string; lastName: string; email: string } } | null

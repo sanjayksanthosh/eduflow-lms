@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { CheckCircle2, ClipboardList, MoreHorizontal, Paperclip, Pencil, Plus, Trash2, Eye } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { CheckCircle2, ClipboardList, FileUp, Loader2, MoreHorizontal, Paperclip, Pencil, Plus, Trash2, Eye, X } from "lucide-react"
 import { toast } from "sonner"
 import { api, getErrorMessage } from "@/lib/api"
 import { PageHeader } from "@/components/shared/PageHeader"
@@ -55,6 +55,8 @@ interface AssignmentListItem {
   status: string
   maxMarks: number
   lateSubmissionAllowed: boolean
+  attachmentUrl: string | null
+  attachmentName: string | null
   batch: { id: string; name: string; code: string }
   course: { id: string; title: string } | null
   _count: { submissions: number }
@@ -200,6 +202,18 @@ export function MentorAssignmentsPage() {
                   <span>Due {formatDate(assignment.dueDate)}</span>
                   <span>{assignment._count.submissions} submissions</span>
                 </div>
+                {assignment.attachmentUrl ? (
+                  <a
+                    className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                    href={assignment.attachmentUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Paperclip className="size-3.5" />
+                    {assignment.attachmentName ?? "Attachment"}
+                  </a>
+                ) : null}
               </CardContent>
             </Card>
           ))}
@@ -239,6 +253,7 @@ interface AssignmentFormDialogProps {
 
 function AssignmentFormDialog({ open, onOpenChange, assignment, onSaved }: AssignmentFormDialogProps) {
   const isEdit = Boolean(assignment)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [batches, setBatches] = useState<MentorBatchSummary[]>([])
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
@@ -247,6 +262,9 @@ function AssignmentFormDialog({ open, onOpenChange, assignment, onSaved }: Assig
   const [dueDate, setDueDate] = useState("")
   const [lateSubmission, setLateSubmission] = useState(false)
   const [batchId, setBatchId] = useState("")
+  const [file, setFile] = useState<File | null>(null)
+  const [existingAttachment, setExistingAttachment] = useState<{ url: string; name: string } | null>(null)
+  const [uploading, setUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
@@ -265,7 +283,30 @@ function AssignmentFormDialog({ open, onOpenChange, assignment, onSaved }: Assig
     setDueDate(assignment?.dueDate ? assignment.dueDate.slice(0, 16) : "")
     setLateSubmission(Boolean(assignment?.lateSubmissionAllowed))
     setBatchId(assignment?.batchId ?? "")
+    setFile(null)
+    setUploading(false)
+    setExistingAttachment(
+      assignment?.attachmentUrl
+        ? { url: assignment.attachmentUrl, name: assignment.attachmentName ?? "Attachment" }
+        : null
+    )
+    if (fileInputRef.current) fileInputRef.current.value = ""
   }, [open, assignment])
+
+  const pickFile = (selected: File | null) => {
+    if (!selected) return
+    if (selected.size > 50 * 1024 * 1024) {
+      toast.error("File is too large. Maximum size is 50 MB.")
+      return
+    }
+    setFile(selected)
+  }
+
+  const clearAttachment = () => {
+    setFile(null)
+    setExistingAttachment(null)
+    if (fileInputRef.current) fileInputRef.current.value = ""
+  }
 
   const handleSubmit = async () => {
     if (!title.trim() || !dueDate) {
@@ -278,6 +319,18 @@ function AssignmentFormDialog({ open, onOpenChange, assignment, onSaved }: Assig
     }
     setSubmitting(true)
     try {
+      let attachment: { url: string; name: string } | null = existingAttachment
+      if (file) {
+        setUploading(true)
+        const form = new FormData()
+        form.append("file", file)
+        try {
+          const { data } = await api.post("/mentor/assignments/attachment", form)
+          attachment = data.data as { url: string; name: string }
+        } finally {
+          setUploading(false)
+        }
+      }
       const payload = {
         title,
         description: description.trim() || undefined,
@@ -286,6 +339,11 @@ function AssignmentFormDialog({ open, onOpenChange, assignment, onSaved }: Assig
         dueDate,
         lateSubmissionAllowed: lateSubmission,
         batchId,
+        ...(attachment
+          ? { attachmentUrl: attachment.url, attachmentName: attachment.name }
+          : isEdit
+            ? { attachmentUrl: "", attachmentName: "" }
+            : {}),
       }
       if (isEdit) {
         await api.patch(`/mentor/assignments/${assignment!.id}`, payload)
@@ -379,13 +437,63 @@ function AssignmentFormDialog({ open, onOpenChange, assignment, onSaved }: Assig
               onChange={(e) => setInstructions(e.target.value)}
             />
           </div>
+          <div className="space-y-2">
+            <Label>Attachment</Label>
+            {file || existingAttachment ? (
+              <div className="flex items-center justify-between gap-2 rounded-lg border bg-muted/40 px-3 py-2">
+                <div className="flex min-w-0 items-center gap-2">
+                  <Paperclip className="size-4 shrink-0 text-muted-foreground" />
+                  <span className="truncate text-sm">
+                    {file ? file.name : existingAttachment?.name}
+                  </span>
+                  {file ? (
+                    <span className="shrink-0 text-xs text-muted-foreground">New</span>
+                  ) : null}
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="Remove attachment"
+                  onClick={clearAttachment}
+                >
+                  <X />
+                </Button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed px-3 py-3 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground active:scale-[0.99]"
+              >
+                <FileUp className="size-4" />
+                Attach a file (any type, up to 50 MB)
+              </button>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
+            />
+          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={submitting}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={submitting}>
-            {submitting ? "Saving..." : isEdit ? "Save changes" : "Publish assignment"}
+          <Button onClick={handleSubmit} disabled={submitting || uploading}>
+            {uploading ? (
+              <>
+                <Loader2 className="animate-spin" /> Uploading...
+              </>
+            ) : submitting ? (
+              "Saving..."
+            ) : isEdit ? (
+              "Save changes"
+            ) : (
+              "Publish assignment"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

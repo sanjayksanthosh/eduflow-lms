@@ -2,7 +2,7 @@ import { Router } from 'express';
 import * as mentor from '../controllers/mentor.controller';
 import { authenticate, authorize } from '../middleware/auth';
 import { validate } from '../middleware/validate';
-import { upload } from '../middleware/upload';
+import { uploadAny } from '../middleware/upload';
 import {
   markAttendanceSchema,
   createAssignmentSchema,
@@ -34,7 +34,7 @@ router.get('/attendance/students/:studentId', mentor.getStudentAttendance);
 // ---------------- Assignments ----------------
 router.get('/assignments', mentor.listAssignments);
 router.post('/assignments', validate(createAssignmentSchema), mentor.createAssignment);
-router.post('/assignments/attachment', upload.single('file'), mentor.uploadAssignmentAttachment);
+router.post('/assignments/attachment', uploadAny.single('file'), mentor.uploadAssignmentAttachment);
 router.get('/assignments/:id', mentor.getAssignment);
 router.patch('/assignments/:id', validate(updateAssignmentSchema), mentor.updateAssignment);
 router.delete('/assignments/:id', mentor.deleteAssignment);

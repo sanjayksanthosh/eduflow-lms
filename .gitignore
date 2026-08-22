@@ -11,3 +11,5 @@ backend/prisma/*.db
 backend/prisma/dev.db
 frontend/.vite/
 *.tsbuildinfo
+
+backend/uploads/

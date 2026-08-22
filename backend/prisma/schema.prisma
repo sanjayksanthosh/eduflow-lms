@@ -101,6 +101,8 @@ model Batch {
   status      String   @default("ACTIVE")
   description String?
   mentorId    String?  @db.ObjectId
+  classDays   Int[]    @default([])
+  classTime   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

@@ -45,18 +45,12 @@ interface MentorFormState {
   fullName: string
   email: string
   phone: string
-  department: string
-  qualification: string
-  subjects: string
 }
 
 const emptyForm: MentorFormState = {
   fullName: "",
   email: "",
   phone: "",
-  department: "",
-  qualification: "",
-  subjects: "",
 }
 
 interface MentorFormDialogProps {
@@ -82,9 +76,6 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
             fullName: fullName(mentor.user.firstName, mentor.user.lastName),
             email: mentor.user.email,
             phone: mentor.user.phone ?? "",
-            department: mentor.department ?? "",
-            qualification: mentor.qualification ?? "",
-            subjects: mentor.subjects?.join(", ") ?? "",
           }
         : emptyForm
     )
@@ -103,14 +94,6 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
     try {
       const common = {
         phone: form.phone.trim() || undefined,
-        department: form.department.trim() || undefined,
-        qualification: form.qualification.trim() || undefined,
-        subjects: form.subjects.trim()
-          ? form.subjects
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean)
-          : undefined,
       }
       if (isEdit) {
         await api.patch(`/admin/mentors/${mentor!.id}`, {
@@ -177,35 +160,6 @@ function MentorFormDialog({ open, onOpenChange, mentor, onSaved }: MentorFormDia
                 </p>
               ) : null}
             </div>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="department">Department</Label>
-              <Input
-                id="department"
-                value={form.department}
-                placeholder="e.g. Computer Science"
-                onChange={(e) => set("department", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="qualification">Qualification</Label>
-              <Input
-                id="qualification"
-                value={form.qualification}
-                placeholder="e.g. M.Tech CSE"
-                onChange={(e) => set("qualification", e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="subjects">Subjects</Label>
-            <Input
-              id="subjects"
-              value={form.subjects}
-              placeholder="e.g. Mathematics, Physics"
-              onChange={(e) => set("subjects", e.target.value)}
-            />
           </div>
         </div>
         <DialogFooter>

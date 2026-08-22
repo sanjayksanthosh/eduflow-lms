@@ -87,17 +87,20 @@ export const updateMentorSchema = z.object({
 });
 
 // ---------------- Batch ----------------
-export const createBatchSchema = z.object({
-  name: z.string().trim().min(1, 'Batch name is required'),
-  code: z.string().trim().min(1, 'Batch code is required'),
-  courseId: z.string().min(1, 'Course is required'),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  capacity: z.coerce.number().int().min(1).default(30),
-  status: z.enum([BATCH_STATUS.ACTIVE, BATCH_STATUS.COMPLETED, BATCH_STATUS.ARCHIVED]).optional(),
-  description: z.string().optional(),
-  mentorId: z.string().optional(),
-});
+export const createBatchSchema = z
+  .object({
+    name: z.string().trim().min(1, 'Batch name is required'),
+    code: z.string().trim().optional(),
+    courseId: z.string().min(1, 'Course is required'),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    capacity: z.coerce.number().int().min(1).default(30),
+    status: z.enum([BATCH_STATUS.ACTIVE, BATCH_STATUS.COMPLETED, BATCH_STATUS.ARCHIVED]).optional(),
+    description: z.string().optional(),
+    mentorId: z.string().optional(),
+    classDays: z.array(z.coerce.number().int().min(0).max(6)).optional(),
+    classTime: z.string().trim().optional(),
+  });
 
 export const updateBatchSchema = createBatchSchema.partial();
 
@@ -177,6 +180,8 @@ export const createAssignmentSchema = z.object({
   batchId: z.string().min(1, 'Batch is required'),
   courseId: z.string().optional(),
   status: z.string().optional(),
+  attachmentUrl: z.string().optional(),
+  attachmentName: z.string().optional(),
 });
 
 export const updateAssignmentSchema = createAssignmentSchema.partial();
