@@ -1,33 +1,74 @@
 import type { LucideIcon } from "lucide-react"
-import { ArrowUpRight } from "lucide-react"
+import { TrendingDown, TrendingUp } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
+
+type StatTone = "primary" | "success" | "warning" | "danger" | "info" | "neutral"
+
+const TONE_STYLES: Record<StatTone, string> = {
+  primary: "bg-primary/10 text-primary",
+  success: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  warning: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  danger: "bg-red-500/10 text-red-600 dark:text-red-400",
+  info: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  neutral: "bg-muted text-muted-foreground",
+}
 
 interface StatCardProps {
   title: string
   value: string | number
   icon: LucideIcon
+  /** Small muted caption below the value */
   hint?: string
+  /** Trending pill text, e.g. "+12.4%" */
+  trend?: string
+  trendDirection?: "up" | "down"
+  tone?: StatTone
   className?: string
   to?: string
 }
 
-export function StatCard({ title, value, icon: Icon, hint, className, to }: StatCardProps) {
+export function StatCard({
+  title,
+  value,
+  icon: Icon,
+  hint,
+  trend,
+  trendDirection = "up",
+  tone = "primary",
+  className,
+  to,
+}: StatCardProps) {
   const content = (
-    <CardContent className="p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-1.5">
-          <p className="text-sm text-muted-foreground">{title}</p>
-          <p className="text-3xl font-semibold tracking-tight">{value}</p>
-          {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
-        </div>
-        <div className="relative rounded-lg bg-muted p-2.5">
-          <Icon className="size-5 text-muted-foreground" />
-          {to ? (
-            <ArrowUpRight className="absolute -right-1 -top-1 size-3.5 text-primary opacity-0 transition-opacity group-hover:opacity-100" />
-          ) : null}
-        </div>
+    <CardContent className="p-5">
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+          {title}
+        </p>
+        <Icon className={cn("size-9 shrink-0 rounded-xl p-2", TONE_STYLES[tone])} />
+      </div>
+      <p className="stat-value mt-3 text-foreground">{value}</p>
+      <div className="mt-2.5">
+        {trend ? (
+          <span
+            className={cn(
+              "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide",
+              trendDirection === "down"
+                ? "bg-red-500/10 text-red-600 dark:text-red-400"
+                : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+            )}
+          >
+            {trendDirection === "down" ? (
+              <TrendingDown className="size-3" />
+            ) : (
+              <TrendingUp className="size-3" />
+            )}
+            {trend}
+          </span>
+        ) : hint ? (
+          <span className="text-xs text-muted-foreground">{hint}</span>
+        ) : null}
       </div>
     </CardContent>
   )

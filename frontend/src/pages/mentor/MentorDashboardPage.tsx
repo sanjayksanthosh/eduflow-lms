@@ -95,7 +95,9 @@ export function MentorDashboardPage() {
             <CalendarDays className="size-4 text-primary" />
             Today&apos;s Schedule
           </CardTitle>
-          <Badge variant="secondary">{dayLabel}</Badge>
+          <Badge variant="secondary" className="uppercase tracking-wide">
+            {dayLabel}
+          </Badge>
         </CardHeader>
         <CardContent>
           {todayClasses.length === 0 ? (
@@ -104,26 +106,29 @@ export function MentorDashboardPage() {
               No classes scheduled for today. Enjoy the free day!
             </p>
           ) : (
-            <ul className="space-y-2.5">
+            <ul className="space-y-2">
               {todayClasses.map((batch) => (
                 <li key={batch.id}>
                   <Link
                     to="/mentor/batches"
-                    className="flex items-center gap-3 rounded-lg border bg-muted/30 px-3 py-2.5 transition-colors hover:border-primary/40 hover:bg-muted/60"
+                    className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-3 py-2.5 transition-colors hover:border-primary/40 hover:bg-muted/60"
                   >
-                    <span className="flex shrink-0 items-center gap-1.5 rounded-md bg-primary/10 px-2 py-1 text-sm font-semibold text-primary">
+                    <span className="flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1.5 text-sm font-bold text-primary">
                       <Clock className="size-3.5" />
                       {batch.classTime || "—"}
                     </span>
-                    <span
-                      className="inline-block size-2.5 shrink-0 rounded-full"
-                      style={{ background: batch.course.color ?? "#6366f1" }}
-                    />
-                    <span className="min-w-0 flex-1 truncate text-sm font-medium">{batch.name}</span>
-                    <span className="hidden truncate text-xs text-muted-foreground sm:block">
-                      {batch.course.title}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold">
+                        {batch.name}{" "}
+                        <span className="ml-1 text-[11px] font-bold uppercase tracking-wide text-primary">
+                          {batch.code}
+                        </span>
+                      </span>
+                      <span className="block truncate text-xs text-muted-foreground">
+                        {batch.course.title}
+                      </span>
                     </span>
-                    <Badge variant="outline" className="shrink-0">
+                    <Badge variant="outline" className="shrink-0 rounded-full">
                       {batch._count.students} student{batch._count.students === 1 ? "" : "s"}
                     </Badge>
                   </Link>
@@ -135,12 +140,13 @@ export function MentorDashboardPage() {
       </Card>
 
       <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="My Batches" value={stats.batches} icon={BookOpen} to="/mentor/batches" />
-        <StatCard title="Total Students" value={stats.totalStudents} icon={Users} to="/mentor/batches" />
+        <StatCard title="My Batches" value={stats.batches} icon={BookOpen} tone="primary" hint="Assigned cohorts" to="/mentor/batches" />
+        <StatCard title="Total Students" value={stats.totalStudents} icon={Users} tone="info" hint="Across your batches" to="/mentor/batches" />
         <StatCard
           title="Attendance Today"
           value={stats.todayAttendanceMarked}
           icon={CalendarCheck}
+          tone="success"
           hint={stats.todayAttendanceMarked === 0 ? "Not marked yet" : "records saved"}
           to="/mentor/attendance"
         />
@@ -148,6 +154,7 @@ export function MentorDashboardPage() {
           title="Pending Reviews"
           value={stats.pendingReviews}
           icon={ClipboardCheck}
+          tone={stats.pendingReviews > 0 ? "warning" : "success"}
           hint={stats.pendingReviews === 0 ? "All caught up" : "submissions to grade"}
           to="/mentor/assignments"
         />

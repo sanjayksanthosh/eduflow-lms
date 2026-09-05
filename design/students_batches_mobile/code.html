@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#faf8ff;}body{overscroll-behavior:none;font-family:'Plus Jakarta Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-tertiary": "#ffffff", "surface-variant": "#dae2fd", "on-secondary-fixed": "#00201d", "on-tertiary-fixed": "#341100", "secondary-fixed": "#89f5e7", "surface-container": "#eaedff", "on-secondary": "#ffffff", "on-primary": "#ffffff", "surface": "#faf8ff", "on-secondary-fixed-variant": "#005049", "surface-dim": "#d2d9f4", "surface-container-lowest": "#ffffff", "error-container": "#ffdad6", "tertiary": "#7b3300", "primary-fixed": "#e2dfff", "secondary-container": "#86f2e4", "on-primary-fixed-variant": "#3323cc", "on-surface": "#131b2e", "on-tertiary-container": "#ffd2bd", "on-background": "#131b2e", "on-tertiary-fixed-variant": "#783200", "primary-fixed-dim": "#c3c0ff", "tertiary-fixed-dim": "#ffb690", "surface-tint": "#4d44e3", "primary": "#3525cd", "on-surface-variant": "#464555", "surface-bright": "#faf8ff", "surface-container-high": "#e2e7ff", "on-error-container": "#93000a", "tertiary-container": "#a04500", "background": "#faf8ff", "secondary": "#006a61", "inverse-on-surface": "#eef0ff", "inverse-surface": "#283044", "outline": "#777587", "on-secondary-container": "#006f66", "surface-container-low": "#f2f3ff", "on-primary-container": "#dad7ff", "inverse-primary": "#c3c0ff", "secondary-fixed-dim": "#6bd8cb", "on-primary-fixed": "#0f0069", "error": "#ba1a1a", "outline-variant": "#c7c4d8", "surface-container-highest": "#dae2fd", "primary-container": "#4f46e5", "tertiary-fixed": "#ffdbca", "on-error": "#ffffff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-3xs": "0.125rem", "space-4xl": "3rem", "space-5xl": "4rem", "space-3xl": "2.5rem", "space-sm": "0.75rem", "space-md": "1rem", "space-2xs": "0.25rem", "space-xl": "1.5rem", "space-xs": "0.5rem", "space-lg": "1.25rem", "space-2xl": "2rem" }, "fontFamily": { "display-lg-mobile": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "title-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "stat-metric": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "label-xs": ["Plus Jakarta Sans"] }, "fontSize": { "display-lg-mobile": ["2rem", {"lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "800"}], "label-lg": ["0.875rem", {"lineHeight": "1.25rem", "fontWeight": "600"}], "body-md": ["0.875rem", {"lineHeight": "1.375rem", "fontWeight": "400"}], "title-sm": ["1rem", {"lineHeight": "1.5rem", "fontWeight": "600"}], "headline-lg": ["2rem", {"lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "700"}], "body-sm": ["0.75rem", {"lineHeight": "1.125rem", "fontWeight": "400"}], "stat-metric": ["1.875rem", {"lineHeight": "2.25rem", "letterSpacing": "-0.025em", "fontWeight": "800"}], "body-lg": ["1rem", {"lineHeight": "1.6rem", "fontWeight": "400"}], "headline-sm": ["1.25rem", {"lineHeight": "1.75rem", "letterSpacing": "-0.01em", "fontWeight": "600"}], "headline-lg-mobile": ["1.5rem", {"lineHeight": "2rem", "letterSpacing": "-0.015em", "fontWeight": "700"}], "headline-md": ["1.5rem", {"lineHeight": "2rem", "letterSpacing": "-0.015em", "fontWeight": "700"}], "title-md": ["1.125rem", {"lineHeight": "1.625rem", "fontWeight": "600"}], "label-md": ["0.75rem", {"lineHeight": "1rem", "letterSpacing": "0.01em", "fontWeight": "600"}], "display-lg": ["3rem", {"lineHeight": "3.5rem", "letterSpacing": "-0.03em", "fontWeight": "800"}], "label-xs": ["0.6875rem", {"lineHeight": "0.875rem", "letterSpacing": "0.04em", "fontWeight": "700"}] } } } };</script></head><body class="bg-surface text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe"><div class="h-16 px-space-md flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="Brand logo. - Primary color: #4f46e5
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1WxMbgn8VjSsIgnsj8Gkf0UqkrPIHPhHupmk7Q74k0NXnUyhsv1OBkU9_JCHBiAlojZ4PHZGhpsXuuEeDlEh0MHgEEux28VUhZ0U2r1QRaevTaOAM6GnC7vustczOVaYnpE8F5RyIAlXIzXg2Gmz4pgQZsgNS7U2FjkNeinromaIg8_zjzjMQaJdyJoN7PvkKlPLNcn-V7b5UDokLqqF_vdh29wrIS0gA9mhMbkD4BGck-7ZT_VewJq73DK"/><div class="flex flex-col min-w-0"><span class="font-label-xs text-label-xs uppercase tracking-wider text-primary truncate">EduPulse OS</span><h1 class="font-title-sm text-title-sm text-on-surface truncate">Learners &amp; Courses</h1></div></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Notifications" class="w-11 h-11 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors relative" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-tertiary-container ring-2 ring-surface"></span></button><div class="relative flex items-center shrink-0"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UCElts88Ka9pCSHZAWcY7VFB--wINRZWmMWnAcsk-0xjDoLRcgpLDbo3xoNS_ZudnzNo0KpzO9k9jdp16AmEa9vYSySpf4oB2nwvcpyqG8JBnK_IK8iA9_r8pbmCMubJq7l3fTcl9OwpkHIfvnz9D8eCz1ej45bamUX20aTIL2FYCwE-p_mTRMjGkI3i2TdmqfPI27Gy52kmHvmgMVpr-097Jq2YHM984c1ZxO8d1_A2M9m4WEY8BeowZp"/><span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-secondary ring-2 ring-surface"></span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<section class="flex flex-col px-space-md pt-space-sm pb-space-xs gap-space-sm">
+<div class="flex items-center gap-space-xs bg-surface-container px-space-md py-space-xs rounded-full shadow-sm">
+<span class="material-symbols-outlined text-primary text-[20px] shrink-0">search</span>
+<input class="w-full bg-transparent text-on-surface placeholder:text-on-surface-variant font-body-md text-body-md focus:outline-none" id="studentSearchInput" placeholder="Search learner by name, ID..." type="text"/>
+<button aria-label="Voice search or clear" class="text-on-surface-variant hover:text-primary transition-colors flex items-center shrink-0" type="button">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+</button>
+</div>
+<div class="flex items-center gap-space-xs overflow-x-auto pb-space-2xs no-scrollbar -mx-space-md px-space-md">
+<button class="filter-chip active flex items-center gap-space-3xs px-space-sm py-1 rounded-full bg-primary text-on-primary font-label-md text-label-md shrink-0 shadow-sm transition-transform active:scale-95" type="button">
+<span>All Batches</span>
+<span class="bg-primary-fixed text-on-primary-fixed text-[10px] font-bold px-1.5 py-0.2 rounded-full ml-1">1,420</span>
+</button>
+<button class="filter-chip flex items-center gap-space-3xs px-space-sm py-1 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md shrink-0 hover:bg-surface-container-high transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-secondary shrink-0"></span>
+<span>Active</span>
+</button>
+<button class="filter-chip flex items-center gap-space-3xs px-space-sm py-1 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md shrink-0 hover:bg-surface-container-high transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-error shrink-0"></span>
+<span>Flagged (12)</span>
+</button>
+<button class="filter-chip flex items-center gap-space-3xs px-space-sm py-1 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md shrink-0 hover:bg-surface-container-high transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-tertiary shrink-0"></span>
+<span>Pending (18)</span>
+</button>
+</div>
+</section>
+<section class="grid grid-cols-3 gap-space-xs px-space-md py-space-xs">
+<div class="bg-surface-container-lowest p-space-sm rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-space-3xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant">Enrolled</span>
+<span class="material-symbols-outlined text-[16px] text-primary">groups</span>
+</div>
+<p class="font-stat-metric text-stat-metric text-primary tracking-tight">1,420</p>
+<span class="font-label-xs text-label-xs text-secondary flex items-center mt-space-3xs">
+<span class="material-symbols-outlined text-[12px] mr-0.5">trending_up</span>+3.4%
+      </span>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-space-3xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant">Unassigned</span>
+<span class="material-symbols-outlined text-[16px] text-tertiary">assignment_late</span>
+</div>
+<p class="font-stat-metric text-stat-metric text-tertiary tracking-tight">18</p>
+<span class="font-label-xs text-label-xs text-tertiary-container flex items-center mt-space-3xs font-semibold">
+        Action req.
+      </span>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-space-3xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant">Pass Rate</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">verified</span>
+</div>
+<p class="font-stat-metric text-stat-metric text-secondary tracking-tight">92.4%</p>
+<span class="font-label-xs text-label-xs text-secondary flex items-center mt-space-3xs">
+<span class="material-symbols-outlined text-[12px] mr-0.5">check_circle</span>High
+      </span>
+</div>
+</section>
+<section class="flex items-center justify-between px-space-md pt-space-sm pb-space-3xs">
+<h2 class="font-title-sm text-title-sm text-on-surface font-bold flex items-center gap-space-2xs">
+      Learner Directory
+      <span class="text-on-surface-variant font-normal text-body-sm">(5 of 1,420)</span>
+</h2>
+<button class="text-primary font-label-md text-label-md flex items-center gap-0.5 hover:underline" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span> Filter
+    </button>
+</section>
+<div class="flex flex-col px-space-md gap-space-sm pb-space-5xl" id="studentRoster">
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col gap-space-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="relative shrink-0">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="Close up profile portrait of Sophia Martinez, a bright young female software engineering learner smiling warmly, wearing navy blue hoodie against modern light studio background with soft ambient violet reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3GKrM28NGlO4gfLMJliiB56SNk0NgTEdzZba3NWGP9Y-DAFdwr6QGrXRHpOh-MzKc0Tpg71JWJ8EINHr0LLdGMBy4DDBK-TPkopzwSIhhPPjH3Yp04T0rVLUDdRExZYN-b47FiGLfKcF3HskU2P81x5_aNVxl1pQRhdkzr8StbYJ2yMHZ-BIOZSqZSg9FQlx1a2C9s8n0-f9N_Fn0MPsCIMavNvJxc_oD4Y3TYo1peECbfrP5sy-ZzA"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<h3 class="font-title-sm text-title-sm text-on-surface font-bold truncate">Sophia Martinez</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">ID: #ST-89024 • Cohort Alpha</p>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-xs text-label-xs font-semibold shrink-0">
+          Active
+        </span>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low px-space-sm py-space-xs rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]">terminal</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">FullStack-24</span>
+</div>
+<div class="flex items-center gap-space-2xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Grade:</span>
+<span class="font-label-md text-label-md font-bold text-primary bg-primary-fixed px-1.5 py-0.5 rounded">A (94.2%)</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-xs text-label-xs text-on-surface-variant">
+<span>Attendance</span>
+<span class="font-bold text-on-surface">96%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 96%"></div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-3xs">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Mentor: Dr. Alistair Vance</span>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Message learner" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">chat_bubble</span>
+</button>
+<button aria-label="Call learner" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</button>
+</div>
+</div>
+</article>
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col gap-space-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="relative shrink-0">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="Headshot of Julian Hayes, a male UI/UX design student with glasses and friendly demeanor, wearing a clean olive green sweater, soft indoor lighting with subtle teal and violet gradient background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX5MvZtm_h_bMPPd53cjQ7eswyJUDG4QkK4nNIykLEj2T2q6qp5Yv6WRd6VpZuFLokaa-BNn8iJokv2NalZ5cx11TevvVluGQ_K-pJ2BVlniDT7lVX61yZz5p3OrN1mIdhg1TqvC6tqyWnTAWgPea3g8hke3NOteGZDw0Gy6uvZMa6Ia6p9RKaPv3Ktl8q7SjJzrl-Es5ALuemVVYebJmLqf0xN9k4TsKwVMiMSBJK1aqLuyZCknlyzg"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<h3 class="font-title-sm text-title-sm text-on-surface font-bold truncate">Julian Hayes</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">ID: #ST-89051 • Cohort Beta</p>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-xs text-label-xs font-semibold shrink-0">
+          Active
+        </span>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low px-space-sm py-space-xs rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[18px]">palette</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">UIUX-12</span>
+</div>
+<div class="flex items-center gap-space-2xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Grade:</span>
+<span class="font-label-md text-label-md font-bold text-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded">B+ (87.5%)</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-xs text-label-xs text-on-surface-variant">
+<span>Attendance</span>
+<span class="font-bold text-on-surface">88%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 88%"></div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-3xs">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Mentor: Elena Rostova</span>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Message learner" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">chat_bubble</span>
+</button>
+<button aria-label="Call learner" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</button>
+</div>
+</div>
+</article>
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col gap-space-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="relative shrink-0">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="Professional profile image of Arjun Patel, an earnest South Asian male learner in dark casual shirt looking slightly focused, high quality clean portrait with warm lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSJeblbU8nMHIyXBb0cPX8eu1gqUaRnf-sUKb8Q7HXB0SobZDqTHVFQ2y-V1yPbFK7kDcL6dZz4FM7XogpG2iLrCcBKZxkB8Mq86AfdmWre9x8WFjRXE9S4K2Mq0JfJOFghKj0k9yp6XwxXM0eTTXc9pKbzCbaPxXa-deZTcwwNCgsqtBGBdPFu2OmWiiLqT8jWFLyBL-90vtddpx0vxPbmq2OZ1Rovb865wPRYB3Slo0bc_giHlfgHg"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-error rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<h3 class="font-title-sm text-title-sm text-on-surface font-bold truncate">Arjun Patel</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">ID: #ST-87941 • Cohort Gamma</p>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-xs text-label-xs font-semibold shrink-0 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">warning</span> Flagged
+        </span>
+</div>
+<div class="flex items-center justify-between bg-error-container/30 px-space-sm py-space-xs rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary text-[18px]">data_object</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Python-08</span>
+</div>
+<div class="flex items-center gap-space-2xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Grade:</span>
+<span class="font-label-md text-label-md font-bold text-tertiary bg-tertiary-fixed px-1.5 py-0.5 rounded">C+ (74.0%)</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-xs text-label-xs text-error font-semibold">
+<span>Attendance Alert</span>
+<span>68%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full" style="width: 68%"></div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-3xs">
+<span class="font-body-sm text-body-sm text-error font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">event_busy</span> 3 Consecutive Absences
+        </span>
+<button class="px-space-sm py-1 rounded-full bg-error text-on-error font-label-xs text-label-xs font-bold hover:opacity-90 active:scale-95 transition-all" type="button">
+          Intervene
+        </button>
+</div>
+</article>
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col gap-space-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="relative shrink-0">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="Portrait of Emma Kowalski, a bright enthusiastic female onboarding student with blonde hair tied back, friendly smile, clean minimalist lighting with light lilac studio colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnjJzw0WHfUOcdenCIyxAfrJmjvW9LiGs-SCRWMRSdcZZXdFhH-vhc8MI9KiXDBgckTap4LAkeWQhYV-PQKPPUcEmyKD1Xd3wgZNezywV2jMnDHBcD8BwD5PlClAPaP8bEUkuPE5NwnIEOF_5DmDzOgf62gqZtakN1o5yTo_0aLUGB0IXb4aMh_Bg2yuzF_-kT1LxTYsqu5wfchGNzoe_ujMd8jTwAFfmqD1pq7gVLGutJTEqMSf5jag"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-tertiary-fixed-dim rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<h3 class="font-title-sm text-title-sm text-on-surface font-bold truncate">Emma Kowalski</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">ID: #ST-90112 • Enrolled Yesterday</p>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-xs text-label-xs font-semibold shrink-0">
+          Pending Start
+        </span>
+</div>
+<div class="flex items-center justify-between bg-surface-container px-space-sm py-space-xs rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">hourglass_top</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Awaiting Batch</span>
+</div>
+<button class="px-space-sm py-1 rounded-full bg-primary text-on-primary font-label-xs text-label-xs font-bold hover:bg-primary-container active:scale-95 transition-transform flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[14px]">add_circle</span> Assign Batch
+        </button>
+</div>
+<div class="flex items-center justify-between pt-space-3xs text-body-sm text-on-surface-variant">
+<span>Orientation: Self-Paced Done</span>
+<span class="font-semibold text-secondary flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-0.5">check</span> 100% Ready
+        </span>
+</div>
+</article>
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col gap-space-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="relative shrink-0">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="Sharp high quality portrait of David Lin, an East Asian male computer science learner looking confident and relaxed in dark blue apparel, warm soft key light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0yU03UysT8KpdmpnP0GZTiofOxvRUNmH05FlreBNO2H8WuFJOKqkAARS5Mgn0WvKnCX-GKqgbBIaMkxnQRf12ScbwdV3llJSTpem95PNhnBDPmWx1KFgVd1D-dZyux3xVKeFpTKhBaeOilO4TdtW1jt3Y9qaa2u0Uz8rGtC5gfgMRKShndXJzAf52ZoqZ8tqCrMJzO3n5RFksIh2yhbZuPbVxTyToR3SFsjBbOOnntSHjylt_7Tv5-g"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<h3 class="font-title-sm text-title-sm text-on-surface font-bold truncate">David Lin</h3>
+<span class="material-symbols-outlined text-[16px] text-tertiary" title="Top Performer">military_tech</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">ID: #ST-88940 • Cohort Alpha</p>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-xs text-label-xs font-semibold shrink-0">
+          Active
+        </span>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low px-space-sm py-space-xs rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]">terminal</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">FullStack-24</span>
+</div>
+<div class="flex items-center gap-space-2xs">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Grade:</span>
+<span class="font-label-md text-label-md font-bold text-primary bg-primary-fixed px-1.5 py-0.5 rounded">A+ (98.5%)</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-xs text-label-xs text-on-surface-variant">
+<span>Attendance</span>
+<span class="font-bold text-secondary">99% (Honor Roll)</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 99%"></div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-3xs">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Mentor: Dr. Alistair Vance</span>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Message learner" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">chat_bubble</span>
+</button>
+<button aria-label="Call learner" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+<div class="fixed bottom-20 right-4 z-40">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm bg-primary text-on-primary rounded-full shadow-lg hover:bg-primary-container active:scale-95 transition-all cursor-pointer font-label-lg text-label-lg" id="registerStudentBtn" type="button">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+<span>Register Student</span>
+</button>
+</div>
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-space-md py-space-xs rounded-full bg-inverse-surface text-inverse-on-surface font-label-md text-label-md shadow-xl transition-all duration-300 opacity-0 pointer-events-none translate-y-2" id="quickToast">
+    Action recorded successfully
+  </div>
+</div>
+<script>
+  (function() {
+    const chips = document.querySelectorAll('.filter-chip');
+    const toast = document.getElementById('quickToast');
+    const registerBtn = document.getElementById('registerStudentBtn');
+    const searchInput = document.getElementById('studentSearchInput');
+    const cards = document.querySelectorAll('#studentRoster > article');
+
+    function showNotification(msg) {
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2200);
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => {
+          c.classList.remove('bg-primary', 'text-on-primary');
+          c.classList.add('bg-surface-container', 'text-on-surface-variant');
+        });
+        chip.classList.remove('bg-surface-container', 'text-on-surface-variant');
+        chip.classList.add('bg-primary', 'text-on-primary');
+        const chipText = chip.innerText.split('\n')[0].trim();
+        showNotification(`Filtered by: ${chipText}`);
+      });
+    });
+
+    if (registerBtn) {
+      registerBtn.addEventListener('click', () => {
+        showNotification("Opening Quick Student Enrollment Modal...");
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          card.style.display = text.includes(query) ? 'flex' : 'none';
+        });
+      });
+    }
+
+    document.querySelectorAll('button[aria-label="Call learner"]').forEach(b => {
+      b.addEventListener('click', () => showNotification("Initiating secure audio session..."));
+    });
+
+    document.querySelectorAll('button[aria-label="Message learner"]').forEach(b => {
+      b.addEventListener('click', () => showNotification("Opening direct student thread..."));
+    });
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-label-md"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center gap-space-3xs w-16 h-12 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[24px]">dashboard</span><span class="font-label-xs text-label-xs">Home</span></a><a class="flex flex-col items-center justify-center gap-space-3xs w-16 h-12 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="learners-and-courses" href="#"><span class="material-symbols-outlined text-[24px]">auto_stories</span><span class="font-label-xs text-label-xs">Courses</span></a><a class="flex flex-col items-center justify-center gap-space-3xs w-16 h-12 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="schedule-and-tasks" href="#"><span class="material-symbols-outlined text-[24px]">calendar_month</span><span class="font-label-xs text-label-xs">Schedule</span></a><a class="flex flex-col items-center justify-center gap-space-3xs w-16 h-12 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="profile-and-role-management" href="#"><span class="material-symbols-outlined text-[24px]">badge</span><span class="font-label-xs text-label-xs">Profile</span></a></div></nav></body></html>

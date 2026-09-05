@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { Outlet, useLocation } from "react-router-dom"
-import { GraduationCap } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import {
   Sheet,
@@ -12,6 +11,7 @@ import { SidebarContent } from "@/components/layout/Sidebar"
 import { BottomNav } from "@/components/layout/BottomNav"
 import { ThemeToggle } from "@/components/layout/ThemeToggle"
 import { UserMenu } from "@/components/layout/UserMenu"
+import { BrandLogo } from "@/components/layout/BrandLogo"
 import { NAV_ITEMS } from "@/lib/nav"
 
 export function AppLayout() {
@@ -20,10 +20,11 @@ export function AppLayout() {
   const location = useLocation()
 
   const entries = NAV_ITEMS[user?.role ?? "ADMIN"] ?? []
+  const role = (user?.role ?? "ADMIN").toLowerCase()
 
   return (
-    <div className="flex min-h-screen bg-muted/30">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r bg-background lg:block">
+    <div className="flex min-h-screen bg-background" data-role={role}>
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r bg-card lg:block">
         <SidebarContent entries={entries} />
       </aside>
 
@@ -45,7 +46,7 @@ export function AppLayout() {
             onClick={() => setDrawerOpen(true)}
             className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground active:scale-95 lg:hidden"
           >
-            <GraduationCap className="size-6 text-primary" />
+            <BrandLogo size={24} />
           </button>
           <div className="flex-1" />
           <ThemeToggle />

@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { AppSettings } from "@/lib/types"
 
 const DEFAULT_SETTINGS: AppSettings = {
-  instituteName: "EduFlow Institute",
+  instituteName: "EduPulse Academy",
   logo: null,
   address: "",
   theme: "light",

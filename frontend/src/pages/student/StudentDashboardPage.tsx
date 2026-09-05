@@ -5,6 +5,7 @@ import { PageLoader } from "@/components/shared/PageLoader"
 import { ErrorState } from "@/components/shared/ErrorState"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { StatusBadge } from "@/components/shared/StatusBadge"
 import { useApi } from "@/hooks/useApi"
 import { formatDate, timeAgo } from "@/lib/format"
 
@@ -77,23 +78,27 @@ export function StudentDashboardPage() {
       />
 
       <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Attendance" value={`${stats.attendancePercent}%`} icon={CalendarCheck} to="/student/attendance" />
+        <StatCard title="Attendance" value={`${stats.attendancePercent}%`} icon={CalendarCheck} tone="success" hint="Overall rate" to="/student/attendance" />
         <StatCard
           title="Attendance Today"
           value={todayLabel(stats.attendanceToday)}
           icon={CalendarCheck}
+          tone="info"
           hint="Today"
         />
         <StatCard
           title="Course Progress"
           value={`${stats.courseProgressPercent}%`}
           icon={GraduationCap}
+          tone="primary"
+          hint="Across courses"
           to="/student/courses"
         />
         <StatCard
           title="Average Marks"
           value={stats.averageMarks}
           icon={TrendingUp}
+          tone="warning"
           hint={`${stats.upcomingAssignments} upcoming assignment${stats.upcomingAssignments === 1 ? "" : "s"}`}
           to="/student/assignments"
         />
@@ -123,7 +128,7 @@ export function StudentDashboardPage() {
                     </div>
                     <div className="h-2 overflow-hidden rounded-full bg-muted">
                       <div
-                        className="h-full rounded-full bg-primary"
+                        className="h-full rounded-full bg-gradient-to-r from-primary to-sky-400"
                         style={{ width: `${course.progressPercent}%` }}
                       />
                     </div>
@@ -151,11 +156,13 @@ export function StudentDashboardPage() {
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
                       {assignment.mySubmission ? (
-                        <Badge variant="outline">Submitted</Badge>
+                        <StatusBadge status="SUBMITTED" />
                       ) : (
-                        <Badge variant="secondary">Pending</Badge>
+                        <StatusBadge status="PENDING" />
                       )}
-                      <Badge variant="outline">{formatDate(assignment.dueDate)}</Badge>
+                      <Badge variant="outline" className="rounded-full">
+                        {formatDate(assignment.dueDate)}
+                      </Badge>
                     </div>
                   </li>
                 ))}

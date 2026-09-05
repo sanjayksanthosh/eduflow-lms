@@ -3,76 +3,166 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ---- Kinetic Learning Architecture (EduPulse) design tokens ---- */
+
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.541 0.281 293.009);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.606 0.25 292.717);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.541 0.281 293.009);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.606 0.25 292.717);
+  --radius: 0.75rem;
+
+  /* Typography - Plus Jakarta Sans everywhere */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --default-font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Elevation - L1 cards per design spec */
+  --shadow-card: 0 1px 3px 0 rgb(15 23 42 / 0.04), 0 1px 2px -1px rgb(15 23 42 / 0.03);
+  --shadow-card-hover: 0 8px 16px -4px rgb(15 23 42 / 0.1);
+
+  /* Canvas + surfaces (slate canvas, white cards) */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  /* Role accent - default = Admin indigo */
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+
+  /* Neutral soft gray (secondary button / badge surface) */
+  --secondary: #eef2f7;
+  --secondary-foreground: #1e293b;
+
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  /* Semantic status accents */
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #ffffff;
+  --info: #3b82f6;
+  --info-foreground: #ffffff;
+
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #4f46e5;
+
+  --chart-1: #4f46e5;
+  --chart-2: #0d9488;
+  --chart-3: #3b82f6;
+  --chart-4: #f59e0b;
+  --chart-5: #10b981;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #4f46e5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #4f46e5;
+}
+
+/* Role-scoped resonance: admin = indigo, mentor = teal, student = blue */
+[data-role="admin"] {
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --ring: #4f46e5;
+  --sidebar-primary: #4f46e5;
+}
+
+[data-role="mentor"] {
+  --primary: #0d9488;
+  --primary-foreground: #ffffff;
+  --ring: #0d9488;
+  --sidebar-primary: #0d9488;
+}
+
+[data-role="student"] {
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --ring: #3b82f6;
+  --sidebar-primary: #3b82f6;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0f172a;
+  --foreground: #e2e8f0;
+  --card: #1e293b;
+  --card-foreground: #e2e8f0;
+  --popover: #1e293b;
+  --popover-foreground: #e2e8f0;
+
+  --primary: #818cf8;
+  --primary-foreground: #131036;
+
+  --secondary: #293548;
+  --secondary-foreground: #e2e8f0;
+
+  --muted: #273449;
+  --muted-foreground: #94a3b8;
+  --accent: #293548;
+  --accent-foreground: #e2e8f0;
+
+  --destructive: #f87171;
+  --destructive-foreground: #450a0a;
+
+  --success: #34d399;
+  --success-foreground: #022c22;
+  --warning: #fbbf24;
+  --warning-foreground: #451a03;
+  --info: #60a5fa;
+  --info-foreground: #172554;
+
+  --border: rgb(255 255 255 / 10%);
+  --input: rgb(255 255 255 / 14%);
+  --ring: #818cf8;
+
+  --chart-1: #818cf8;
+  --chart-2: #2dd4bf;
+  --chart-3: #60a5fa;
+  --chart-4: #fbbf24;
+  --chart-5: #34d399;
+
+  --sidebar: #16213a;
+  --sidebar-foreground: #e2e8f0;
+  --sidebar-primary: #818cf8;
+  --sidebar-primary-foreground: #131036;
+  --sidebar-accent: #293548;
+  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-border: rgb(255 255 255 / 10%);
+  --sidebar-ring: #818cf8;
+}
+
+.dark[data-role="admin"] {
+  --primary: #818cf8;
+  --primary-foreground: #131036;
+  --ring: #818cf8;
+  --sidebar-primary: #818cf8;
+}
+
+.dark[data-role="mentor"] {
+  --primary: #2dd4bf;
+  --primary-foreground: #022c2b;
+  --ring: #2dd4bf;
+  --sidebar-primary: #2dd4bf;
+}
+
+.dark[data-role="student"] {
+  --primary: #60a5fa;
+  --primary-foreground: #0a2540;
+  --ring: #60a5fa;
+  --sidebar-primary: #60a5fa;
 }
 
 @theme inline {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -88,6 +178,13 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -133,6 +230,12 @@
   textarea,
   select {
     font-size: 16px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
   }
 }
 
@@ -183,6 +286,28 @@
   .stagger > *:nth-child(8) { animation-delay: 350ms; }
   .animate-nav-in {
     animation: slide-up-nav 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* ---- Design system micro-tokens ---- */
+  .label-micro {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .stat-value {
+    font-size: 1.875rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+  }
+  .card-lift {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card-hover);
   }
 
   /* ---- Safe areas (notched phones) ---- */

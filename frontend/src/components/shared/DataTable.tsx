@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { InlineLoader } from "@/components/shared/PageLoader"
+import { cn } from "@/lib/utils"
 
 export interface Column<T> {
   key: string
@@ -40,7 +41,7 @@ export function DataTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed py-12 text-center">
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed bg-card py-12 text-center">
         <p className="text-sm text-muted-foreground">{emptyMessage}</p>
         {emptyAction}
       </div>
@@ -48,12 +49,18 @@ export function DataTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border">
+    <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-card">
       <Table>
         <TableHeader>
-          <TableRow className="bg-muted/50 hover:bg-muted/50">
+          <TableRow className="bg-muted/60 hover:bg-muted/60">
             {columns.map((col) => (
-              <TableHead key={col.key} className={col.headerClassName}>
+              <TableHead
+                key={col.key}
+                className={cn(
+                  "text-xs font-bold uppercase tracking-wider text-muted-foreground",
+                  col.headerClassName
+                )}
+              >
                 {col.header}
               </TableHead>
             ))}

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom"
-import { GraduationCap } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { BrandLogo } from "@/components/layout/BrandLogo"
 import type { NavEntry } from "@/lib/nav"
 
 interface SidebarContentProps {
@@ -11,11 +11,14 @@ interface SidebarContentProps {
 export function SidebarContent({ entries, onNavigate }: SidebarContentProps) {
   return (
     <div className="flex h-full flex-col">
-      <div className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
-        <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <GraduationCap className="size-5" />
+      <div className="flex h-16 shrink-0 items-center gap-2.5 border-b px-4">
+        <BrandLogo size={32} />
+        <div className="flex flex-col leading-none">
+          <span className="text-[15px] font-extrabold tracking-tight text-foreground">
+            EduPulse
+          </span>
+          <span className="label-micro mt-1 text-primary">Academy OS</span>
         </div>
-        <span className="text-lg font-semibold tracking-tight">EduFlow</span>
       </div>
       <nav className="flex-1 space-y-0.5 overflow-y-auto p-3">
         {entries.map((entry, index) => {
@@ -38,8 +41,8 @@ export function SidebarContent({ entries, onNavigate }: SidebarContentProps) {
               onClick={onNavigate}
               className={({ isActive }) =>
                 cn(
-                  "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
-                  isActive && "bg-muted font-medium text-foreground"
+                  "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+                  isActive && "bg-primary/10 font-semibold text-primary hover:bg-primary/10 hover:text-primary"
                 )
               }
             >
