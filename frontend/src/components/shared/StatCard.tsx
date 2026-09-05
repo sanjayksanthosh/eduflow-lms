@@ -43,9 +43,7 @@ export function StatCard({
   const content = (
     <CardContent className="p-5">
       <div className="flex items-start justify-between gap-3">
-        <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-          {title}
-        </p>
+        <p className="label-micro text-muted-foreground">{title}</p>
         <Icon className={cn("size-9 shrink-0 rounded-xl p-2", TONE_STYLES[tone])} />
       </div>
       <p className="stat-value mt-3 text-foreground">{value}</p>

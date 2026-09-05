@@ -7,15 +7,15 @@ import { capitalize } from "@/lib/format"
  * 0.04em tracked, washed 10% container + strong matching text, no border.
  */
 const STATUS_STYLES: Record<string, string> = {
-  // Positive / fulfillment
-  ACTIVE: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-  PUBLISHED: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-  PRESENT: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-  GRADED: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-  COMPLETED: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-  APPROVED: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-  ACCEPTED: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-  SYNCED: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+  // Positive / fulfillment (design secondary teal)
+  ACTIVE: "bg-teal-500/10 text-teal-700 dark:text-teal-400",
+  PUBLISHED: "bg-teal-500/10 text-teal-700 dark:text-teal-400",
+  PRESENT: "bg-teal-500/10 text-teal-700 dark:text-teal-400",
+  GRADED: "bg-teal-500/10 text-teal-700 dark:text-teal-400",
+  COMPLETED: "bg-teal-500/10 text-teal-700 dark:text-teal-400",
+  APPROVED: "bg-teal-500/10 text-teal-700 dark:text-teal-400",
+  ACCEPTED: "bg-teal-500/10 text-teal-700 dark:text-teal-400",
+  SYNCED: "bg-teal-500/10 text-teal-700 dark:text-teal-400",
 
   // In progress
   IN_PROGRESS: "bg-indigo-500/10 text-indigo-700 dark:text-indigo-400",
