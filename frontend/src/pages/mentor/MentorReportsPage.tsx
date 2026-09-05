@@ -7,10 +7,12 @@ import { PageLoader } from "@/components/shared/PageLoader"
 import { ErrorState } from "@/components/shared/ErrorState"
 import { EmptyState } from "@/components/shared/EmptyState"
 import { StatCard } from "@/components/shared/StatCard"
+import { StatusBadge } from "@/components/shared/StatusBadge"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 import {
   Dialog,
   DialogContent,
@@ -139,32 +141,39 @@ export function MentorReportsPage() {
       <PageHeader title="Reports" description="Student performance reports across your batches." />
 
       <div className="stagger grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Students" value={data?.totalStudents ?? 0} icon={Users} />
-        <StatCard title="Batches" value={data?.batches.length ?? 0} icon={BookOpen} />
-        <StatCard title="Avg Attendance" value={`${avgAttendance}%`} icon={BarChart3} />
-        <StatCard title="Avg Marks" value={avgMarks} icon={GraduationCap} />
+        <StatCard title="Students" value={data?.totalStudents ?? 0} icon={Users} tone="primary" hint="In your batches" />
+        <StatCard title="Batches" value={data?.batches.length ?? 0} icon={BookOpen} tone="info" hint="Assigned cohorts" />
+        <StatCard title="Avg Attendance" value={`${avgAttendance}%`} icon={BarChart3} tone="success" hint="Across students" />
+        <StatCard title="Avg Marks" value={avgMarks} icon={GraduationCap} tone="warning" hint="Graded work" />
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <Input
-          placeholder="Search by name or email..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="sm:max-w-xs"
-        />
-        <Select value={batchId} onValueChange={(value) => setBatchId(value ?? "all")}>
-          <SelectTrigger className="sm:w-56">
-            <SelectValue placeholder="All batches" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All batches</SelectItem>
-            {data?.batches.map((batch) => (
-              <SelectItem key={batch.id} value={batch.id}>
-                {batch.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-border bg-card p-4 shadow-(--shadow-card)">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Input
+            placeholder="Search by name or email..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="sm:w-72"
+          />
+          <Select value={batchId} onValueChange={(value) => setBatchId(value ?? "all")}>
+            <SelectTrigger className="sm:w-56">
+              <SelectValue placeholder="All batches" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All batches</SelectItem>
+              {data?.batches.map((batch) => (
+                <SelectItem key={batch.id} value={batch.id}>
+                  {batch.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="rounded-full">
+            {filtered.length} student{filtered.length === 1 ? "" : "s"}
+          </Badge>
+        </div>
       </div>
 
       {data && data.students.length === 0 ? (
@@ -174,17 +183,31 @@ export function MentorReportsPage() {
           description="Students in your batches will appear here."
         />
       ) : (
-        <div className="rounded-lg border">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-(--shadow-card)">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Batch</TableHead>
-                <TableHead className="text-center">Attendance</TableHead>
-                <TableHead className="text-center">Avg Marks</TableHead>
-                <TableHead className="text-center">Submissions</TableHead>
-                <TableHead className="min-w-36">Course Progress</TableHead>
-                <TableHead className="text-right">Report</TableHead>
+              <TableRow className="bg-muted/60 hover:bg-muted/60">
+                <TableHead className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Student
+                </TableHead>
+                <TableHead className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Batch
+                </TableHead>
+                <TableHead className="text-center text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Attendance
+                </TableHead>
+                <TableHead className="text-center text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Avg Marks
+                </TableHead>
+                <TableHead className="text-center text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Submissions
+                </TableHead>
+                <TableHead className="min-w-36 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Course Progress
+                </TableHead>
+                <TableHead className="text-right text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Report
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -216,7 +239,12 @@ export function MentorReportsPage() {
                     <p className="text-xs text-muted-foreground">{student.course?.title ?? ""}</p>
                   </TableCell>
                   <TableCell className="text-center">
-                    <span className={`text-sm font-medium ${attendanceColor(student.stats.attendancePercent)}`}>
+                    <span
+                      className={cn(
+                        "text-sm font-semibold",
+                        attendanceColor(student.stats.attendancePercent)
+                      )}
+                    >
                       {student.stats.attendancePercent}%
                     </span>
                   </TableCell>
@@ -230,7 +258,7 @@ export function MentorReportsPage() {
                     <div className="flex items-center gap-2">
                       <div className="h-1.5 min-w-16 flex-1 overflow-hidden rounded-full bg-muted">
                         <div
-                          className="h-full rounded-full bg-primary"
+                          className="h-full rounded-full bg-gradient-to-r from-primary to-sky-400"
                           style={{ width: `${student.stats.courseProgress}%` }}
                         />
                       </div>
@@ -300,20 +328,7 @@ interface StudentReport {
   }
 }
 
-const reportStatusBadge = (status: string) => {
-  switch (status) {
-    case "PRESENT":
-      return <Badge className="border-emerald-500/30 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">Present</Badge>
-    case "LATE":
-      return <Badge className="border-amber-500/30 bg-amber-500/15 text-amber-700 dark:text-amber-400">Late</Badge>
-    case "ABSENT":
-      return <Badge className="border-red-500/30 bg-red-500/15 text-red-700 dark:text-red-400">Absent</Badge>
-    case "LEAVE":
-      return <Badge className="border-blue-500/30 bg-blue-500/15 text-blue-700 dark:text-blue-400">On leave</Badge>
-    default:
-      return <Badge variant="outline">{status}</Badge>
-  }
-}
+const reportStatusBadge = (status: string) => <StatusBadge status={status} />
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
