@@ -324,6 +324,15 @@ function BatchDetailDialog({ batchId, onClose, onSaved }: BatchDetailDialogProps
     }
   }
 
+  useEffect(() => {
+    if (!batchId) {
+      setDetail(null)
+      return
+    }
+    void load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [batchId])
+
   const openAssign = () => {
     setSelected([])
     setAssignOpen(true)
