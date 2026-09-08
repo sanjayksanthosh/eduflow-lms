@@ -12,12 +12,12 @@ interface SearchInputProps {
 export function SearchInput({ value, onChange, placeholder = "Search...", className }: SearchInputProps) {
   return (
     <div className={cn("relative", className)}>
-      <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+      <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="h-8 pr-8 pl-8"
+        className="h-10 pr-9 pl-9"
       />
       {value ? (
         <button

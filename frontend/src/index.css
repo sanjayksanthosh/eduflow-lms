@@ -14,9 +14,12 @@
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --default-font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  /* Elevation - L1 cards per design spec */
-  --shadow-card: 0 1px 3px 0 rgb(38 32 100 / 0.08), 0 1px 2px -1px rgb(38 32 100 / 0.06);
-  --shadow-card-hover: 0 8px 16px -4px rgb(38 32 100 / 0.12);
+  /* Elevation - Material 3 levels */
+  --elevation-1: 0 1px 2px 0 rgb(23 20 66 / 0.1), 0 1px 3px 1px rgb(23 20 66 / 0.08);
+  --elevation-2: 0 1px 2px 0 rgb(23 20 66 / 0.16), 0 2px 6px 2px rgb(23 20 66 / 0.1);
+  --elevation-3: 0 4px 8px 3px rgb(23 20 66 / 0.14), 0 8px 20px -6px rgb(23 20 66 / 0.16);
+  --shadow-card: var(--elevation-1);
+  --shadow-card-hover: var(--elevation-2);
 
   /* Surface stack (surface #faf8ff, lowest #ffffff) */
   --background: #faf8ff;
@@ -162,6 +165,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --shadow-e1: var(--elevation-1);
+  --shadow-e2: var(--elevation-2);
+  --shadow-e3: var(--elevation-3);
 }
 
 @layer base {
