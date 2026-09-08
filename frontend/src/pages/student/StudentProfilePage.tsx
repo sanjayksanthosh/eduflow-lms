@@ -64,8 +64,8 @@ const statusBadge = (status: string) => {
 function DetailItem({ label, value, icon: Icon }: { label: string; value: React.ReactNode; icon: React.ElementType }) {
   return (
     <div className="flex items-start gap-3 py-3">
-      <div className="rounded-md bg-muted p-2">
-        <Icon className="size-4 text-muted-foreground" />
+      <div className="rounded-lg bg-primary/10 p-2">
+        <Icon className="size-4 text-primary" />
       </div>
       <div className="min-w-0">
         <p className="text-xs text-muted-foreground">{label}</p>
@@ -171,7 +171,7 @@ export function StudentProfilePage() {
         {/* Personal info */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Personal Information</CardTitle>
+            <CardTitle>Personal Information</CardTitle>
           </CardHeader>
           <CardContent className="divide-y">
             <DetailItem label="Email" value={profile?.user.email} icon={Mail} />
@@ -193,7 +193,7 @@ export function StudentProfilePage() {
           {/* Recent marks */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Recent Results</CardTitle>
+              <CardTitle>Recent Results</CardTitle>
             </CardHeader>
             <CardContent>
               {profile && profile.submissions.length === 0 ? (
@@ -225,7 +225,7 @@ export function StudentProfilePage() {
           {/* Recent attendance */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Recent Attendance</CardTitle>
+              <CardTitle>Recent Attendance</CardTitle>
             </CardHeader>
             <CardContent>
               {profile && profile.attendance.length === 0 ? (
@@ -250,10 +250,10 @@ export function StudentProfilePage() {
 
 function SummaryTile({ label, value, sub }: { label: string; value: React.ReactNode; sub?: string }) {
   return (
-    <div className={cn("rounded-lg border p-4")}>
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="mt-1 text-2xl font-semibold tracking-tight">{value}</p>
-      {sub ? <p className="mt-0.5 truncate text-xs text-muted-foreground">{sub}</p> : null}
+    <div className={cn("rounded-xl border border-transparent bg-muted/40 p-4 shadow-sm")}>
+      <p className="label-micro text-muted-foreground">{label}</p>
+      <p className="stat-value mt-1.5 text-foreground">{value}</p>
+      {sub ? <p className="mt-1 truncate text-xs text-muted-foreground">{sub}</p> : null}
     </div>
   )
 }

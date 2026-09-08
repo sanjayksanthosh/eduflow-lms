@@ -410,7 +410,7 @@ function StudentReportDialog({ studentId, onClose }: { studentId: string | null;
             {/* Personal info */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Personal Information</CardTitle>
+                <CardTitle>Personal Information</CardTitle>
               </CardHeader>
               <CardContent>
                 <dl className="divide-y">
@@ -433,7 +433,7 @@ function StudentReportDialog({ studentId, onClose }: { studentId: string | null;
             {/* Assignment results */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Assignment Results</CardTitle>
+                <CardTitle>Assignment Results</CardTitle>
               </CardHeader>
               <CardContent>
                 {report.submissions.length === 0 ? (
@@ -471,7 +471,7 @@ function StudentReportDialog({ studentId, onClose }: { studentId: string | null;
             {/* Attendance history */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Recent Attendance</CardTitle>
+                <CardTitle>Recent Attendance</CardTitle>
               </CardHeader>
               <CardContent>
                 {report.attendance.length === 0 ? (

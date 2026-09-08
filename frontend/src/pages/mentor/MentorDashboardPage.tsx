@@ -91,7 +91,7 @@ export function MentorDashboardPage() {
 
       <Card className="animate-page overflow-hidden border-primary/25">
         <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
-          <CardTitle className="flex items-center gap-2 text-base">
+          <CardTitle className="flex items-center gap-2">
             <CalendarDays className="size-4 text-primary" />
             Today&apos;s Schedule
           </CardTitle>

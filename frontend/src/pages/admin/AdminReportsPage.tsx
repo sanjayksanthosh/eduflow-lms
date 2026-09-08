@@ -126,7 +126,7 @@ function ReportPanel({
     <Card>
       <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3 space-y-0 border-b border-border px-5 py-4">
         <div className="flex min-w-0 flex-col gap-1">
-          <CardTitle className="text-base">{title}</CardTitle>
+          <CardTitle>{title}</CardTitle>
           {meta ? <p className="text-xs text-muted-foreground">{meta}</p> : null}
         </div>
         <div className="flex shrink-0 items-center gap-3">{actions}</div>

@@ -82,8 +82,8 @@ export function AdminSettingsPage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Building2 className="size-4 text-muted-foreground" />
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="size-4 text-primary" />
               Institute details
             </CardTitle>
           </CardHeader>
@@ -109,7 +109,7 @@ export function AdminSettingsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Academic calendar</CardTitle>
+            <CardTitle>Academic calendar</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">

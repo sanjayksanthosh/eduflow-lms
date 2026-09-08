@@ -88,75 +88,70 @@ export function AttendanceHeatmap({ records }: { records: HeatmapRecord[] }) {
     return { weeks: weekData, labels: labelData, counts: statusCounts }
   }, [records])
 
-  const columnWidth = (count: number) => `${count * 13 - 3}px`
-
   return (
-    <div className="overflow-x-auto">
-      <div className="inline-block min-w-max">
-        {/* Month labels */}
-        <div className="mb-1.5 flex gap-[3px] pl-9">
+    <div className="w-full">
+      {/* Month labels */}
+      <div className="flex gap-[3px]">
+        <div className="w-8 shrink-0" />
+        <div className="grid flex-1 grid-cols-[repeat(26,minmax(0,1fr))] gap-[3px]">
           {labels.map((label, i) => (
             <span
               key={i}
-              className="text-xs text-muted-foreground"
-              style={{ width: columnWidth(label.count) }}
+              className="truncate pr-1 text-xs text-muted-foreground"
+              style={{ gridColumn: `span ${label.count}` }}
             >
               {label.month}
             </span>
           ))}
         </div>
+      </div>
 
-        <div className="flex gap-[3px]">
-          {/* Weekday labels */}
-          <div className="w-8 shrink-0 space-y-[3px] pr-1 text-xs leading-[10px] text-muted-foreground">
-            <span className="block">Mon</span>
-            <span className="block" />
-            <span className="block">Wed</span>
-            <span className="block" />
-            <span className="block">Fri</span>
-            <span className="block" />
-            <span className="block" />
-          </div>
-
-          {/* Day cells */}
-          <div className="flex gap-[3px]">
-            {weeks.map((week, wi) => (
-              <div key={wi} className="flex flex-col gap-[3px]">
-                {week.map((cell, di) => (
-                  <div
-                    key={di}
-                    title={`${toKey(cell.date)} · ${statusLabel(cell.status)}`}
-                    className={cn("size-[10px] rounded-[2px]", cellClass(cell.status))}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
+      <div className="mt-1.5 flex gap-[3px]">
+        {/* Weekday labels */}
+        <div className="w-8 shrink-0 space-y-[3px] pr-1 text-xs leading-[10px] text-muted-foreground">
+          <span className="block">Mon</span>
+          <span className="block" />
+          <span className="block">Wed</span>
+          <span className="block" />
+          <span className="block">Fri</span>
+          <span className="block" />
+          <span className="block" />
         </div>
 
-        {/* Legend */}
-        <div className="mt-3 flex items-center justify-end gap-4 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1.5">
-            <span className="size-[10px] rounded-[2px] bg-emerald-600" />
-            {counts.PRESENT ? `${counts.PRESENT} present` : "Present"}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="size-[10px] rounded-[2px] bg-emerald-400" />
-            {counts.LATE ? `${counts.LATE} late` : "Late"}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="size-[10px] rounded-[2px] bg-emerald-200" />
-            {counts.LEAVE ? `${counts.LEAVE} leave` : "On leave"}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="size-[10px] rounded-[2px] bg-red-300" />
-            {counts.ABSENT ? `${counts.ABSENT} absent` : "Absent"}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="size-[10px] rounded-[2px] bg-muted" />
-            No record
-          </span>
+        {/* Day cells - fills the full width evenly */}
+        <div className="grid flex-1 grid-rows-7 grid-flow-col gap-[3px]">
+          {weeks.flat().map((cell, i) => (
+            <div
+              key={i}
+              title={`${toKey(cell.date)} · ${statusLabel(cell.status)}`}
+              className={cn("aspect-square min-w-2 rounded-[3px]", cellClass(cell.status))}
+            />
+          ))}
         </div>
+      </div>
+
+      {/* Legend */}
+      <div className="mt-4 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1.5">
+          <span className="size-[10px] rounded-[2px] bg-emerald-600" />
+          {counts.PRESENT ? `${counts.PRESENT} present` : "Present"}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="size-[10px] rounded-[2px] bg-emerald-400" />
+          {counts.LATE ? `${counts.LATE} late` : "Late"}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="size-[10px] rounded-[2px] bg-emerald-200" />
+          {counts.LEAVE ? `${counts.LEAVE} leave` : "On leave"}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="size-[10px] rounded-[2px] bg-red-300" />
+          {counts.ABSENT ? `${counts.ABSENT} absent` : "Absent"}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="size-[10px] rounded-[2px] bg-muted" />
+          No record
+        </span>
       </div>
     </div>
   )

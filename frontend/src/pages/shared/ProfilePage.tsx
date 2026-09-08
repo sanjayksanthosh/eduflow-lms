@@ -130,25 +130,30 @@ export function ProfilePage({ description }: { description?: string }) {
     <div className="space-y-6">
       <PageHeader title="My Profile" description={description ?? "Manage your account details."} />
 
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <Avatar size="lg">
-              <AvatarImage src={me.profileImage ?? undefined} alt={fullName(me.firstName, me.lastName)} />
-              <AvatarFallback>{getInitials(me.firstName, me.lastName)}</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-lg font-semibold">{fullName(me.firstName, me.lastName)}</h2>
-                <Badge variant="secondary">{me.role}</Badge>
-                <Badge variant={me.status === "ACTIVE" ? "outline" : "destructive"}>{me.status}</Badge>
+      <Card className="overflow-hidden">
+        <div className="h-28 bg-gradient-to-r from-primary/80 via-primary/60 to-violet-400/60" />
+        <CardContent className="pt-0">
+          <div className="relative -mt-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="flex items-end gap-4">
+              <div className="rounded-full ring-4 ring-background">
+                <Avatar size="lg" className="size-20">
+                  <AvatarImage src={me.profileImage ?? undefined} alt={fullName(me.firstName, me.lastName)} />
+                  <AvatarFallback className="text-2xl">{getInitials(me.firstName, me.lastName)}</AvatarFallback>
+                </Avatar>
               </div>
-              <p className="text-sm text-muted-foreground">{me.email}</p>
+              <div className="pb-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-2xl font-bold tracking-tight">{fullName(me.firstName, me.lastName)}</h2>
+                  <Badge variant="secondary">{me.role}</Badge>
+                  <Badge variant={me.status === "ACTIVE" ? "outline" : "destructive"}>{me.status}</Badge>
+                </div>
+                <p className="mt-1 text-sm text-muted-foreground">{me.email}</p>
+              </div>
             </div>
-            <div className="rounded-lg bg-muted px-4 py-2 text-center">
-              <UserRound className="mx-auto mb-1 size-4 text-muted-foreground" />
-              <p className="text-xs text-muted-foreground">Member since</p>
-              <p className="text-sm font-medium">
+            <div className="rounded-xl bg-muted/60 px-4 py-3 text-center">
+              <UserRound className="mx-auto mb-1 size-4 text-primary" />
+              <p className="label-micro text-muted-foreground">Member since</p>
+              <p className="mt-0.5 text-sm font-semibold">
                 {new Date(me.createdAt).toLocaleDateString(undefined, { month: "short", year: "numeric" })}
               </p>
             </div>
@@ -159,7 +164,7 @@ export function ProfilePage({ description }: { description?: string }) {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Personal Information</CardTitle>
+            <CardTitle>Personal Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="stagger grid gap-4 sm:grid-cols-2">
@@ -192,7 +197,7 @@ export function ProfilePage({ description }: { description?: string }) {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
+            <CardTitle className="flex items-center gap-2">
               <KeyRound className="size-4" /> Change Password
             </CardTitle>
           </CardHeader>
