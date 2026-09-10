@@ -42,7 +42,7 @@ export function SidebarContent({ entries, onNavigate }: SidebarContentProps) {
               className={({ isActive }) =>
                 cn(
                   "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
-                  isActive && "bg-primary/10 font-semibold text-primary hover:bg-primary/10 hover:text-primary"
+                  isActive && "bg-secondary text-secondary-foreground font-semibold hover:bg-secondary hover:text-secondary-foreground"
                 )
               }
             >

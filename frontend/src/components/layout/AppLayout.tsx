@@ -39,7 +39,7 @@ export function AppLayout() {
       </Sheet>
 
       <div className="flex min-w-0 flex-1 flex-col lg:pl-64">
-        <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b bg-background/95 px-4 pt-safe backdrop-blur lg:pt-0">
+        <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-border bg-card/95 px-4 pt-safe backdrop-blur lg:pt-0">
           <button
             type="button"
             aria-label="Open menu"
