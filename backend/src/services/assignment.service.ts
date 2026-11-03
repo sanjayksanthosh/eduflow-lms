@@ -37,7 +37,9 @@ export const assignmentList = async (query: Record<string, unknown>) => {
         graded: a.submissions.filter((s) => s.marks != null).length,
         averageMarks: a.submissions.some((s) => s.marks != null)
           ? Math.round(
-              a.submissions.filter((s) => s.marks != null).reduce((acc, s) => acc + (s.marks ?? 0), 0) /
+              a.submissions
+                .filter((s) => s.marks != null)
+                .reduce((acc, s) => acc + (s.marks ?? 0), 0) /
                 a.submissions.filter((s) => s.marks != null).length
             )
           : 0,
@@ -47,10 +49,7 @@ export const assignmentList = async (query: Record<string, unknown>) => {
   };
 };
 
-export const createAssignment = async (
-  input: Record<string, unknown>,
-  mentorId: string
-) => {
+export const createAssignment = async (input: Record<string, unknown>, mentorId: string) => {
   const batch = await prisma.batch.findUnique({
     where: { id: input.batchId as string },
     include: { students: { select: { userId: true } } },
@@ -104,7 +103,13 @@ export const getAssignment = async (assignmentId: string) => {
       mentor: { select: { id: true, user: { select: { firstName: true, lastName: true } } } },
       submissions: {
         include: {
-          student: { include: { user: { select: { firstName: true, lastName: true, email: true, profileImage: true } } } },
+          student: {
+            include: {
+              user: {
+                select: { firstName: true, lastName: true, email: true, profileImage: true },
+              },
+            },
+          },
         },
         orderBy: { submittedAt: 'desc' },
       },
@@ -206,7 +211,9 @@ export const submitAssignment = async (
 
   const isLate = new Date() > assignment.dueDate;
   if (isLate && !assignment.lateSubmissionAllowed) {
-    throw ApiError.badRequest('This assignment is past its due date and late submission is not allowed.');
+    throw ApiError.badRequest(
+      'This assignment is past its due date and late submission is not allowed.'
+    );
   }
 
   const existing = await prisma.assignmentSubmission.findFirst({

@@ -28,7 +28,9 @@ export const batchList = async (query: Record<string, unknown>) => {
       orderBy: { createdAt: sortOrder },
       include: {
         course: { select: { id: true, title: true, code: true, color: true } },
-        mentor: { select: { id: true, user: { select: { firstName: true, lastName: true, email: true } } } },
+        mentor: {
+          select: { id: true, user: { select: { firstName: true, lastName: true, email: true } } },
+        },
         _count: { select: { students: true, assignments: true } },
       },
     }),
@@ -38,7 +40,10 @@ export const batchList = async (query: Record<string, unknown>) => {
 };
 
 const generateBatchCode = async (course: { code: string }) => {
-  const prefix = (course.code || 'BATCH').replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 6);
+  const prefix = (course.code || 'BATCH')
+    .replace(/[^a-zA-Z0-9]/g, '')
+    .toUpperCase()
+    .slice(0, 6);
   for (let attempt = 0; attempt < 10; attempt += 1) {
     const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
     const code = `${prefix}-${suffix}`;
@@ -123,7 +128,7 @@ export const getBatch = async (batchId: string) => {
       attendance: summary,
       attendancePercent: attendance.length
         ? Math.round(
-            ((summary['PRESENT'] ?? 0) + (summary['LATE'] ?? 0)) / attendance.length * 100
+            (((summary['PRESENT'] ?? 0) + (summary['LATE'] ?? 0)) / attendance.length) * 100
           )
         : 0,
       averageMarks: graded.length
@@ -148,10 +153,7 @@ export const updateBatch = async (batchId: string, input: Record<string, unknown
       name: input.name as string | undefined,
       code: input.code as string | undefined,
       courseId: input.courseId as string | undefined,
-      mentorId:
-        input.mentorId !== undefined
-          ? ((input.mentorId as string) ?? null)
-          : undefined,
+      mentorId: input.mentorId !== undefined ? ((input.mentorId as string) ?? null) : undefined,
       startDate: input.startDate ? new Date(input.startDate as string) : undefined,
       endDate: input.endDate ? new Date(input.endDate as string) : undefined,
       capacity: input.capacity as number | undefined,
@@ -160,7 +162,7 @@ export const updateBatch = async (batchId: string, input: Record<string, unknown
       classDays: Array.isArray(input.classDays)
         ? [...new Set((input.classDays as unknown[]).map(Number))].sort()
         : undefined,
-      classTime: input.classTime !== undefined ? ((input.classTime as string) || null) : undefined,
+      classTime: input.classTime !== undefined ? (input.classTime as string) || null : undefined,
     },
     include: { course: true, mentor: { include: { user: true } } },
   });
@@ -176,7 +178,9 @@ export const deleteBatch = async (batchId: string) => {
   });
   const assignmentIds = assignments.map((a) => a.id);
   if (assignmentIds.length > 0) {
-    await prisma.assignmentSubmission.deleteMany({ where: { assignmentId: { in: assignmentIds } } });
+    await prisma.assignmentSubmission.deleteMany({
+      where: { assignmentId: { in: assignmentIds } },
+    });
     await prisma.assignment.deleteMany({ where: { id: { in: assignmentIds } } });
   }
   await prisma.attendance.deleteMany({ where: { batchId } });

@@ -1,11 +1,7 @@
 import { prisma } from '../config/prisma';
 import { startOfDay, endOfDay } from '../utils/pagination';
 
-export const attendanceReport = async (query: {
-  batchId?: string;
-  from?: string;
-  to?: string;
-}) => {
+export const attendanceReport = async (query: { batchId?: string; from?: string; to?: string }) => {
   const where: Record<string, unknown> = {};
   if (query.batchId) where.batchId = query.batchId;
   if (query.from || query.to) {
@@ -64,7 +60,9 @@ export const studentPerformanceReport = async (batchId?: string) => {
     const avg = graded.length
       ? Math.round(graded.reduce((a, sub) => a + (sub.marks ?? 0), 0) / graded.length)
       : 0;
-    const present = s.attendance.filter((a) => a.status === 'PRESENT' || a.status === 'LATE').length;
+    const present = s.attendance.filter(
+      (a) => a.status === 'PRESENT' || a.status === 'LATE'
+    ).length;
     const attendancePercent = s.attendance.length
       ? Math.round((present / s.attendance.length) * 100)
       : 0;

@@ -108,7 +108,9 @@ export const attendanceForBatchDate = async (batchId: string, date?: string) => 
 
   const students = await prisma.student.findMany({
     where: { batchId },
-    include: { user: { select: { firstName: true, lastName: true, email: true, profileImage: true } } },
+    include: {
+      user: { select: { firstName: true, lastName: true, email: true, profileImage: true } },
+    },
     orderBy: { admissionNumber: 'asc' },
   });
 

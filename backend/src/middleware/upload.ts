@@ -12,7 +12,8 @@ const fileFilter = (
   file: Express.Multer.File,
   cb: multer.FileFilterCallback
 ) => {
-  const allowed = /^(image\/(jpeg|png|webp|gif)|application\/pdf|application\/zip|application\/x-zip-compressed|application\/msword|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document|text\/plain|video\/mp4)$/;
+  const allowed =
+    /^(image\/(jpeg|png|webp|gif)|application\/pdf|application\/zip|application\/x-zip-compressed|application\/msword|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document|text\/plain|video\/mp4)$/;
   if (!allowed.test(file.mimetype)) {
     cb(new ApiError(400, `File type '${file.mimetype}' is not allowed.`));
     return;

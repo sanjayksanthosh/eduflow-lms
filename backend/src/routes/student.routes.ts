@@ -16,7 +16,11 @@ router.get('/me', student.getMe);
 // ---------------- Courses ----------------
 router.get('/courses', student.getCourses);
 router.get('/courses/:id', student.getCourse);
-router.post('/lessons/:lessonId/progress', validate(lessonProgressSchema), student.updateLessonProgress);
+router.post(
+  '/lessons/:lessonId/progress',
+  validate(lessonProgressSchema),
+  student.updateLessonProgress
+);
 
 // ---------------- Attendance ----------------
 router.get('/attendance', student.getAttendance);
@@ -24,11 +28,7 @@ router.get('/attendance', student.getAttendance);
 // ---------------- Assignments ----------------
 router.get('/assignments', student.getAssignments);
 router.get('/assignments/:id', student.getAssignment);
-router.post(
-  '/assignments/:id/submit',
-  upload.single('file'),
-  student.submitAssignment
-);
+router.post('/assignments/:id/submit', upload.single('file'), student.submitAssignment);
 
 // ---------------- Announcements ----------------
 router.get('/announcements', student.getAnnouncements);

@@ -35,6 +35,9 @@ export default [
     },
     rules: {
       ...tseslint.configs.recommended.rules,
+      // TypeScript already understands types and globals; no-undef only produces
+      // false positives (for example on `Express` namespace types).
+      'no-undef': 'off',
       'prettier/prettier': 'error',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': [

@@ -16,7 +16,10 @@ const requireStudentId = (req: Request): string => {
 
 export const getDashboard = asyncHandler(async (req: Request, res: Response) => {
   const studentId = requireStudentId(req);
-  res.json({ success: true, data: await dashboardService.studentDashboard(studentId, req.user!.id) });
+  res.json({
+    success: true,
+    data: await dashboardService.studentDashboard(studentId, req.user!.id),
+  });
 });
 
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
@@ -114,7 +117,12 @@ export const updateLessonProgress = asyncHandler(async (req: Request, res: Respo
   if (!lesson) throw ApiError.notFound('Lesson not found.');
 
   const enrollment = await prisma.courseEnrollment.findFirst({
-    where: { studentId, courseId: lesson.moduleId ? (await prisma.module.findUniqueOrThrow({ where: { id: lesson.moduleId } })).courseId : '' },
+    where: {
+      studentId,
+      courseId: lesson.moduleId
+        ? (await prisma.module.findUniqueOrThrow({ where: { id: lesson.moduleId } })).courseId
+        : '',
+    },
   });
   if (!enrollment) throw ApiError.forbidden('You are not enrolled in this course.');
 
@@ -151,7 +159,10 @@ export const updateLessonProgress = asyncHandler(async (req: Request, res: Respo
 export const getAttendance = asyncHandler(async (req: Request, res: Response) => {
   const studentId = requireStudentId(req);
   const { month } = req.query as { month?: string };
-  res.json({ success: true, data: await attendanceService.attendanceHistoryForStudent(studentId, month) });
+  res.json({
+    success: true,
+    data: await attendanceService.attendanceHistoryForStudent(studentId, month),
+  });
 });
 
 // ---------------- Assignments ----------------
@@ -249,16 +260,14 @@ export const listMessages = asyncHandler(async (req: Request, res: Response) => 
   const messages = await prisma.message.findMany({
     where: {
       batchId: student.batchId,
-      OR: [
-        { recipientId: null },
-        { recipientId: req.user!.id },
-        { senderId: req.user!.id },
-      ],
+      OR: [{ recipientId: null }, { recipientId: req.user!.id }, { senderId: req.user!.id }],
     },
     orderBy: { createdAt: 'desc' },
     take: 100,
     include: {
-      sender: { select: { id: true, firstName: true, lastName: true, role: true, profileImage: true } },
+      sender: {
+        select: { id: true, firstName: true, lastName: true, role: true, profileImage: true },
+      },
     },
   });
   res.json({ success: true, data: messages.reverse() });

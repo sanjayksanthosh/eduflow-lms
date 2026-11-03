@@ -105,9 +105,7 @@ export const adminDashboard = async () => {
         assigned === 0 ? 0 : Math.round((submitted30 / Math.max(assigned, 1)) * 100),
       assignmentSubmissionCount: submitted30,
       submissionGradingRate:
-        totalSubmissions === 0
-          ? 0
-          : Math.round((gradedSubmissions / totalSubmissions) * 100),
+        totalSubmissions === 0 ? 0 : Math.round((gradedSubmissions / totalSubmissions) * 100),
     },
     charts: { studentChart, attendanceTrend },
     recentActivities,
@@ -144,7 +142,10 @@ export const mentorDashboard = async (mentorId: string) => {
         where: { mentorId, dueDate: { gte: new Date() } },
         orderBy: { dueDate: 'asc' },
         take: 5,
-        include: { batch: { select: { name: true, code: true } }, _count: { select: { submissions: true } } },
+        include: {
+          batch: { select: { name: true, code: true } },
+          _count: { select: { submissions: true } },
+        },
       }),
       prisma.announcement.findMany({
         where: { isActive: true, OR: [{ target: 'ALL' }, { authorId: undefined as never }] },
@@ -255,9 +256,7 @@ export const studentDashboard = async (studentId: string, userId: string) => {
     (a) => a.status === 'PRESENT' || a.status === 'LATE'
   ).length;
   const attendancePercent =
-    attendanceRecords.length === 0
-      ? 0
-      : Math.round((present / attendanceRecords.length) * 100);
+    attendanceRecords.length === 0 ? 0 : Math.round((present / attendanceRecords.length) * 100);
 
   const courseIds = enrollments.map((e) => e.courseId);
   const totalLessons = await prisma.lesson.count({
@@ -294,7 +293,9 @@ export const studentDashboard = async (studentId: string, userId: string) => {
         totalLessons === 0 ? 0 : Math.round((completedLessons / totalLessons) * 100),
       upcomingAssignments: upcomingAssignments.length,
       averageMarks: latestSubmissions.length
-        ? Math.round(latestSubmissions.reduce((a, s) => a + (s.marks ?? 0), 0) / latestSubmissions.length)
+        ? Math.round(
+            latestSubmissions.reduce((a, s) => a + (s.marks ?? 0), 0) / latestSubmissions.length
+          )
         : 0,
     },
     upcomingAssignments: upcomingAssignments.map((a) => ({

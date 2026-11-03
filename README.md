@@ -7,6 +7,20 @@ A modern Learning Management System with role-based dashboards for **Admin**,
 - **Frontend**: React 19, Vite, TypeScript, Tailwind CSS 4, Base UI
 - **API docs**: Swagger UI at `/api/docs`
 
+## Screenshots
+
+| Sign in | Admin dashboard |
+| --- | --- |
+| ![Sign in](docs/screenshots/login-desktop.png) | ![Admin dashboard](design/admin_dashboard_overview_analytics/screen.png) |
+
+| Mentor schedule & grading | Student courses |
+| --- | --- |
+| ![Mentor hub](design/mentor_hub_schedule_attendance_grading/screen.png) | ![Student portal](design/student_portal_courses_progress/screen.png) |
+
+The sign-in screen is a screenshot of the running app; the dashboard images are the
+design previews in `design/` that the role dashboards are built from. Mobile layouts
+live in the same folders (`*_mobile`).
+
 ## Project structure
 
 ```
@@ -46,10 +60,25 @@ Demo accounts (seeded):
 | `npm run dev`     | Backend + frontend concurrently    |
 | `npm run build`   | Build backend (`tsc`) + frontend   |
 | `npm run start`   | Run the compiled backend           |
-| `npm run lint`    | Lint backend + frontend            |
-| `npm run test`    | Backend unit tests                 |
+| `npm run lint`    | Lint backend, typecheck frontend   |
+| `npm run test`    | Backend unit tests (Vitest)        |
 | `npm run db:push` | Sync the Prisma schema to Mongo    |
 | `npm run db:seed` | Load demo users / batches / courses |
+
+### Tests
+
+```bash
+npm run test        # 23 tests across 4 files
+```
+
+The suite covers the parts that do not need a database:
+
+| File | Covers |
+| --- | --- |
+| `backend/src/utils/pagination.test.ts` | page/limit clamping, skip maths, search filters, date parsing, day boundaries |
+| `backend/src/utils/ApiError.test.ts` | status helpers, operational flag, validation details |
+| `backend/src/utils/ApiResponse.test.ts` | response envelope and pagination metadata |
+| `backend/src/utils/password.test.ts` | bcrypt hashing and verification |
 
 ## Production deployment (Render + MongoDB Atlas)
 
@@ -107,3 +136,7 @@ git push -u origin main
 - Local file uploads are ephemeral on Render (no persistent disk). Configure
   **Cloudinary** env vars to persist uploads.
 - Secrets are only readable by Render; they never ship in the repo.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

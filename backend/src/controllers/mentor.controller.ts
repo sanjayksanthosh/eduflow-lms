@@ -48,7 +48,17 @@ export const getBatch = asyncHandler(async (req: Request, res: Response) => {
     include: {
       course: { select: { id: true, title: true, code: true, color: true } },
       students: {
-        include: { user: { select: { firstName: true, lastName: true, email: true, phone: true, profileImage: true } } },
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+              email: true,
+              phone: true,
+              profileImage: true,
+            },
+          },
+        },
         orderBy: { admissionNumber: 'asc' },
       },
     },
@@ -61,7 +71,10 @@ export const getAttendance = asyncHandler(async (req: Request, res: Response) =>
   const mentorId = requireMentorId(req);
   await assertBatchAssigned(mentorId, req.params.batchId);
   const { date } = req.query as { date?: string };
-  res.json({ success: true, data: await attendanceService.attendanceForBatchDate(req.params.batchId, date) });
+  res.json({
+    success: true,
+    data: await attendanceService.attendanceForBatchDate(req.params.batchId, date),
+  });
 });
 
 export const markAttendance = asyncHandler(async (req: Request, res: Response) => {
@@ -80,7 +93,10 @@ export const markAttendance = asyncHandler(async (req: Request, res: Response) =
 
 export const getStudentAttendance = asyncHandler(async (req: Request, res: Response) => {
   const { month } = req.query as { month?: string };
-  res.json({ success: true, data: await attendanceService.attendanceHistoryForStudent(req.params.studentId, month) });
+  res.json({
+    success: true,
+    data: await attendanceService.attendanceHistoryForStudent(req.params.studentId, month),
+  });
 });
 
 // ---------------- Assignments ----------------
@@ -118,14 +134,22 @@ export const updateAssignment = asyncHandler(async (req: Request, res: Response)
   const mentorId = requireMentorId(req);
   const existing = await prisma.assignment.findFirst({ where: { id: req.params.id, mentorId } });
   if (!existing) throw ApiError.notFound('Assignment not found.');
-  res.json({ success: true, message: 'Assignment updated.', data: await assignmentService.updateAssignment(req.params.id, req.body) });
+  res.json({
+    success: true,
+    message: 'Assignment updated.',
+    data: await assignmentService.updateAssignment(req.params.id, req.body),
+  });
 });
 
 export const deleteAssignment = asyncHandler(async (req: Request, res: Response) => {
   const mentorId = requireMentorId(req);
   const existing = await prisma.assignment.findFirst({ where: { id: req.params.id, mentorId } });
   if (!existing) throw ApiError.notFound('Assignment not found.');
-  res.json({ success: true, message: 'Assignment deleted.', data: await assignmentService.deleteAssignment(req.params.id) });
+  res.json({
+    success: true,
+    message: 'Assignment deleted.',
+    data: await assignmentService.deleteAssignment(req.params.id),
+  });
 });
 
 export const uploadAssignmentAttachment = asyncHandler(async (req: Request, res: Response) => {
@@ -144,7 +168,11 @@ export const gradeSubmission = asyncHandler(async (req: Request, res: Response) 
   if (submission.assignment.mentorId !== mentorId) {
     throw ApiError.forbidden('This submission is not in one of your assignments.');
   }
-  const graded = await assignmentService.gradeSubmission(req.params.submissionId, req.body, mentorId);
+  const graded = await assignmentService.gradeSubmission(
+    req.params.submissionId,
+    req.body,
+    mentorId
+  );
   res.json({ success: true, message: 'Submission graded.', data: graded });
 });
 
@@ -177,7 +205,9 @@ export const getReports = asyncHandler(async (req: Request, res: Response) => {
 
   const reports = await Promise.all(
     students.map(async (s) => {
-      const present = s.attendance.filter((a) => a.status === 'PRESENT' || a.status === 'LATE').length;
+      const present = s.attendance.filter(
+        (a) => a.status === 'PRESENT' || a.status === 'LATE'
+      ).length;
       const attendancePercent =
         s.attendance.length === 0 ? 0 : Math.round((present / s.attendance.length) * 100);
       const graded = s.submissions.filter((sub) => sub.marks != null);
@@ -263,7 +293,11 @@ export const updateAnnouncement = asyncHandler(async (req: Request, res: Respons
     where: { id: req.params.id, authorId: req.user!.id },
   });
   if (!existing) throw ApiError.notFound('Announcement not found.');
-  res.json({ success: true, message: 'Notice updated.', data: await announcementService.updateAnnouncement(req.params.id, req.body) });
+  res.json({
+    success: true,
+    message: 'Notice updated.',
+    data: await announcementService.updateAnnouncement(req.params.id, req.body),
+  });
 });
 
 export const deleteAnnouncement = asyncHandler(async (req: Request, res: Response) => {
@@ -271,7 +305,11 @@ export const deleteAnnouncement = asyncHandler(async (req: Request, res: Respons
     where: { id: req.params.id, authorId: req.user!.id },
   });
   if (!existing) throw ApiError.notFound('Announcement not found.');
-  res.json({ success: true, message: 'Notice deleted.', data: await announcementService.deleteAnnouncement(req.params.id) });
+  res.json({
+    success: true,
+    message: 'Notice deleted.',
+    data: await announcementService.deleteAnnouncement(req.params.id),
+  });
 });
 
 // ---------------- Messaging ----------------
@@ -281,16 +319,14 @@ export const listMessages = asyncHandler(async (req: Request, res: Response) => 
   const messages = await prisma.message.findMany({
     where: {
       batchId: req.params.batchId,
-      OR: [
-        { recipientId: null },
-        { recipientId: req.user!.id },
-        { senderId: req.user!.id },
-      ],
+      OR: [{ recipientId: null }, { recipientId: req.user!.id }, { senderId: req.user!.id }],
     },
     orderBy: { createdAt: 'desc' },
     take: 100,
     include: {
-      sender: { select: { id: true, firstName: true, lastName: true, role: true, profileImage: true } },
+      sender: {
+        select: { id: true, firstName: true, lastName: true, role: true, profileImage: true },
+      },
     },
   });
   res.json({ success: true, data: messages.reverse() });

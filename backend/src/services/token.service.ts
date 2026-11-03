@@ -12,10 +12,7 @@ export interface RefreshTokenPayload {
   type: 'refresh';
 }
 
-export const signAccessToken = (
-  sub: string,
-  role: AccessTokenPayload['role']
-): string => {
+export const signAccessToken = (sub: string, role: AccessTokenPayload['role']): string => {
   const payload: AccessTokenPayload = { sub, role, type: 'access' };
   return jwt.sign(payload, env.jwt.accessSecret, {
     expiresIn: env.jwt.accessExpiresIn as SignOptions['expiresIn'],

@@ -82,7 +82,8 @@ export const createMentor = async (input: CreateMentorInput) => {
 
   // Initial password defaults to the mentor's phone number.
   const initialPassword = input.password ?? input.phone;
-  if (!initialPassword) throw ApiError.badRequest('Phone number is required (used as the initial password).');
+  if (!initialPassword)
+    throw ApiError.badRequest('Phone number is required (used as the initial password).');
 
   const { firstName, lastName } = splitFullName(input.fullName);
 
@@ -260,13 +261,12 @@ export const mentorPerformance = async (mentorId: string) => {
 
   const batchIds = mentor.batches.map((b) => b.id);
 
-  const [attendanceRecords, assignments, gradedSubmissions, batchStudents] =
-    await Promise.all([
-      prisma.attendance.count({ where: { mentorId } }),
-      prisma.assignment.count({ where: { mentorId } }),
-      prisma.assignmentSubmission.count({ where: { gradedByMentorId: mentorId } }),
-      prisma.student.count({ where: { batchId: { in: batchIds } } }),
-    ]);
+  const [attendanceRecords, assignments, gradedSubmissions, batchStudents] = await Promise.all([
+    prisma.attendance.count({ where: { mentorId } }),
+    prisma.assignment.count({ where: { mentorId } }),
+    prisma.assignmentSubmission.count({ where: { gradedByMentorId: mentorId } }),
+    prisma.student.count({ where: { batchId: { in: batchIds } } }),
+  ]);
 
   return {
     mentor: { id: mentor.id, name: `${mentor.user.firstName} ${mentor.user.lastName}` },

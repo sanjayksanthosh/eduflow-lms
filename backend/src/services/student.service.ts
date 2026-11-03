@@ -109,9 +109,7 @@ export const createStudent = async (input: CreateStudentInput) => {
 
   const password = input.password || input.phone;
   if (!password) {
-    throw ApiError.badRequest(
-      'Phone number is required — it is used as the initial password.'
-    );
+    throw ApiError.badRequest('Phone number is required — it is used as the initial password.');
   }
   const admissionNumber = await generateAdmissionNumber();
   const { firstName, lastName } = splitFullName(input.fullName);
@@ -206,12 +204,13 @@ export const getStudent = async (studentId: string) => {
       assignmentsSubmitted: student.submissions.length,
       averageMarks: student.submissions.some((s) => s.marks != null)
         ? Math.round(
-            student.submissions.filter((s) => s.marks != null).reduce((a, s) => a + (s.marks ?? 0), 0) /
+            student.submissions
+              .filter((s) => s.marks != null)
+              .reduce((a, s) => a + (s.marks ?? 0), 0) /
               student.submissions.filter((s) => s.marks != null).length
           )
         : 0,
-      courseProgress:
-        totalLessons === 0 ? 0 : Math.round((completedLessons / totalLessons) * 100),
+      courseProgress: totalLessons === 0 ? 0 : Math.round((completedLessons / totalLessons) * 100),
     },
   };
 };
@@ -235,9 +234,7 @@ export const updateStudent = async (studentId: string, input: Record<string, unk
     parentPhone: input.parentPhone as string | undefined,
     emergencyContact: input.emergencyContact as string | undefined,
     gender: input.gender as string | undefined,
-    dateOfBirth: input.dateOfBirth
-      ? new Date(input.dateOfBirth as string)
-      : undefined,
+    dateOfBirth: input.dateOfBirth ? new Date(input.dateOfBirth as string) : undefined,
   };
 
   await prisma.user.update({
@@ -275,10 +272,7 @@ export const updateStudentStatus = async (studentId: string, status: string) => 
   return { id: student.id, status: user.status };
 };
 
-export const assignStudentBatch = async (
-  studentId: string,
-  batchId: string | null
-) => {
+export const assignStudentBatch = async (studentId: string, batchId: string | null) => {
   const student = await prisma.student.findUnique({ where: { id: studentId } });
   if (!student) throw ApiError.notFound('Student not found.');
 
@@ -332,10 +326,7 @@ export const resetStudentPassword = async (studentId: string, newPassword: strin
   return { id: student.id, email: user.email, message: 'Password reset successfully.' };
 };
 
-export const updateStudentProfileImage = async (
-  studentId: string,
-  imageUrl: string
-) => {
+export const updateStudentProfileImage = async (studentId: string, imageUrl: string) => {
   const student = await prisma.student.findUnique({ where: { id: studentId } });
   if (!student) throw ApiError.notFound('Student not found.');
   return prisma.user.update({
@@ -357,7 +348,9 @@ export const deleteStudent = async (studentId: string, req?: Request) => {
     where: { studentId: userId },
     data: { studentId: null },
   });
-  await prisma.message.deleteMany({ where: { OR: [{ senderId: userId }, { recipientId: userId }] } });
+  await prisma.message.deleteMany({
+    where: { OR: [{ senderId: userId }, { recipientId: userId }] },
+  });
   await prisma.notification.deleteMany({ where: { recipientId: userId } });
   await prisma.activityLog.updateMany({ where: { userId }, data: { userId: null } });
   await prisma.passwordReset.deleteMany({ where: { userId } });

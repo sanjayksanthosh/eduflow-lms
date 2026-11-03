@@ -18,7 +18,12 @@ export const updateProfile = asyncHandler(async (req: Request, res: Response) =>
   res.json({
     success: true,
     message: 'Profile updated.',
-    data: { firstName: user.firstName, lastName: user.lastName, phone: user.phone, address: user.address },
+    data: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+      address: user.address,
+    },
   });
 });
 
@@ -51,7 +56,9 @@ export const globalSearch = asyncHandler(async (req: Request, res: Response) => 
         },
       },
       take: 5,
-      include: { user: { select: { firstName: true, lastName: true, email: true, profileImage: true } } },
+      include: {
+        user: { select: { firstName: true, lastName: true, email: true, profileImage: true } },
+      },
     }),
     prisma.mentor.findMany({
       where: {
@@ -64,7 +71,9 @@ export const globalSearch = asyncHandler(async (req: Request, res: Response) => 
         },
       },
       take: 5,
-      include: { user: { select: { firstName: true, lastName: true, email: true, profileImage: true } } },
+      include: {
+        user: { select: { firstName: true, lastName: true, email: true, profileImage: true } },
+      },
     }),
     prisma.batch.findMany({
       where: {

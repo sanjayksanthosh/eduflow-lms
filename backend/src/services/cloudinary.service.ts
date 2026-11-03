@@ -9,9 +9,7 @@ cloudinary.config({
 });
 
 const isConfigured = (): boolean =>
-  Boolean(
-    env.cloudinary.cloudName && env.cloudinary.apiKey && env.cloudinary.apiSecret
-  );
+  Boolean(env.cloudinary.cloudName && env.cloudinary.apiKey && env.cloudinary.apiSecret);
 
 export interface UploadedFile {
   url: string;

@@ -15,7 +15,12 @@ const profileSchema = z.object({
 });
 
 router.patch('/profile', authenticate, validate(profileSchema), common.updateProfile);
-router.post('/profile/picture', authenticate, uploadImage.single('image'), common.uploadProfilePicture);
+router.post(
+  '/profile/picture',
+  authenticate,
+  uploadImage.single('image'),
+  common.uploadProfilePicture
+);
 router.get('/search', authenticate, common.globalSearch);
 
 export default router;

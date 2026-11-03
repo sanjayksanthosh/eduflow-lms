@@ -38,7 +38,11 @@ router.post('/assignments/attachment', uploadAny.single('file'), mentor.uploadAs
 router.get('/assignments/:id', mentor.getAssignment);
 router.patch('/assignments/:id', validate(updateAssignmentSchema), mentor.updateAssignment);
 router.delete('/assignments/:id', mentor.deleteAssignment);
-router.post('/assignments/:id/submissions/:submissionId/grade', validate(gradeSubmissionSchema), mentor.gradeSubmission);
+router.post(
+  '/assignments/:id/submissions/:submissionId/grade',
+  validate(gradeSubmissionSchema),
+  mentor.gradeSubmission
+);
 
 // ---------------- Students ----------------
 router.get('/students/:id', mentor.getStudent);

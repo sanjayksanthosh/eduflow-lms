@@ -52,8 +52,16 @@ router.patch('/students/:id', validate(updateStudentSchema), admin.updateStudent
 router.delete('/students/:id', admin.deleteStudent);
 router.patch('/students/:id/status', validate(studentStatusSchema), admin.setStudentStatus);
 router.patch('/students/:id/batch', validate(assignBatchSchema), admin.assignStudentBatch);
-router.post('/students/:id/reset-password', validate(resetPasswordSchema), admin.resetStudentPassword);
-router.post('/students/:id/profile-picture', uploadImage.single('image'), admin.uploadStudentPicture);
+router.post(
+  '/students/:id/reset-password',
+  validate(resetPasswordSchema),
+  admin.resetStudentPassword
+);
+router.post(
+  '/students/:id/profile-picture',
+  uploadImage.single('image'),
+  admin.uploadStudentPicture
+);
 
 // ---------------- Mentors ----------------
 router.get('/mentors', admin.listMentors);
@@ -61,7 +69,11 @@ router.post('/mentors', validate(createMentorSchema), admin.createMentor);
 router.get('/mentors/:id', admin.getMentor);
 router.patch('/mentors/:id', validate(updateMentorSchema), admin.updateMentor);
 router.delete('/mentors/:id', admin.deleteMentor);
-router.post('/mentors/:id/reset-password', validate(resetPasswordSchema), admin.resetMentorPassword);
+router.post(
+  '/mentors/:id/reset-password',
+  validate(resetPasswordSchema),
+  admin.resetMentorPassword
+);
 router.post('/mentors/:id/profile-picture', uploadImage.single('image'), admin.uploadMentorPicture);
 
 // ---------------- Batches ----------------

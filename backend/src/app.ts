@@ -90,7 +90,11 @@ export const createApp = (): Express => {
     if (fs.existsSync(frontendDist)) {
       app.use(express.static(frontendDist, { index: 'index.html' }));
       app.use((req: Request, res: Response, next: NextFunction) => {
-        if (req.method === 'GET' && !req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
+        if (
+          req.method === 'GET' &&
+          !req.path.startsWith('/api') &&
+          !req.path.startsWith('/uploads')
+        ) {
           res.sendFile(path.join(frontendDist, 'index.html'));
           return;
         }

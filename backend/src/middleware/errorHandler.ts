@@ -3,9 +3,7 @@ import { Prisma } from '@prisma/client';
 import { ApiError } from '../utils/ApiError';
 import { logger } from '../utils/logger';
 
-const isPrismaKnownError = (
-  error: unknown
-): error is Prisma.PrismaClientKnownRequestError => {
+const isPrismaKnownError = (error: unknown): error is Prisma.PrismaClientKnownRequestError => {
   return (
     typeof error === 'object' &&
     error !== null &&
@@ -24,7 +22,10 @@ const mapPrismaError = (error: Prisma.PrismaClientKnownRequestError): ApiError =
       return new ApiError(404, 'Record not found.');
     case 'P2003':
       return new ApiError(400, 'Related record does not exist.', [
-        { field: String(error.meta?.field_name ?? 'unknown'), message: 'Foreign key constraint violation' },
+        {
+          field: String(error.meta?.field_name ?? 'unknown'),
+          message: 'Foreign key constraint violation',
+        },
       ]);
     default:
       return new ApiError(500, `Database error (${error.code})`, undefined, false);

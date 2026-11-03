@@ -50,13 +50,13 @@ export const announcementList = async (
     }),
   ]);
 
-  return { data: announcements, meta: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 } };
+  return {
+    data: announcements,
+    meta: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 },
+  };
 };
 
-export const createAnnouncement = async (
-  input: Record<string, unknown>,
-  authorId: string
-) => {
+export const createAnnouncement = async (input: Record<string, unknown>, authorId: string) => {
   const now = new Date();
   const scheduled = input.scheduledAt ? new Date(input.scheduledAt as string) : undefined;
   const isScheduled = scheduled && scheduled > now;
@@ -126,7 +126,10 @@ export const createAnnouncement = async (
   return announcement;
 };
 
-export const updateAnnouncement = async (announcementId: string, input: Record<string, unknown>) => {
+export const updateAnnouncement = async (
+  announcementId: string,
+  input: Record<string, unknown>
+) => {
   const announcement = await prisma.announcement.findUnique({ where: { id: announcementId } });
   if (!announcement) throw ApiError.notFound('Announcement not found.');
 

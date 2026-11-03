@@ -87,7 +87,12 @@ router.post('/logout', authController.logout);
  *       200:
  *         description: Reset link sent (if account exists)
  */
-router.post('/forgot-password', authLimiter, validate(forgotPasswordSchema), authController.forgotPassword);
+router.post(
+  '/forgot-password',
+  authLimiter,
+  validate(forgotPasswordSchema),
+  authController.forgotPassword
+);
 
 /**
  * @swagger

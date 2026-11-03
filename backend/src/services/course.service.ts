@@ -68,7 +68,10 @@ export const getCourse = async (courseId: string) => {
     0
   );
 
-  return { ...course, stats: { modules: course.modules.length, lessons: lessonCount, totalDuration } };
+  return {
+    ...course,
+    stats: { modules: course.modules.length, lessons: lessonCount, totalDuration },
+  };
 };
 
 export const updateCourse = async (courseId: string, input: Record<string, unknown>) => {
@@ -93,9 +96,7 @@ export const deleteCourse = async (courseId: string) => {
 
   const batches = await prisma.batch.count({ where: { courseId } });
   if (batches > 0) {
-    throw ApiError.badRequest(
-      'Cannot delete this course because batches are attached to it.'
-    );
+    throw ApiError.badRequest('Cannot delete this course because batches are attached to it.');
   }
 
   return prisma.course.delete({ where: { id: courseId } });

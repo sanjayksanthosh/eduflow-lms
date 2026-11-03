@@ -62,9 +62,7 @@ export const notifyMany = async (
       where: { id: { in: userIds } },
       select: { id: true, role: true },
     });
-    linkByUser = new Map(
-      users.map((u) => [u.id, `/${u.role.toLowerCase()}${options.link}`])
-    );
+    linkByUser = new Map(users.map((u) => [u.id, `/${u.role.toLowerCase()}${options.link}`]));
   }
 
   await prisma.notification.createMany({

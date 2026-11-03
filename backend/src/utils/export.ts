@@ -49,10 +49,7 @@ export const exportPdf = (
   doc.font('Helvetica-Bold').fontSize(18).text(title, { align: 'center' });
   doc.moveDown(0.3);
   doc.font('Helvetica').fontSize(10).fillColor('#64748b');
-  doc.text(
-    `${subtitle ?? ''}  |  Generated: ${new Date().toLocaleString()}`,
-    { align: 'center' }
-  );
+  doc.text(`${subtitle ?? ''}  |  Generated: ${new Date().toLocaleString()}`, { align: 'center' });
   doc.moveDown(1);
 
   const headers = rows.length > 0 ? Object.keys(rows[0]) : [];
@@ -76,11 +73,7 @@ export const exportPdf = (
     cells.forEach((cell, i) => {
       const x = 40 + i * colWidth;
       if (isHeader) {
-        doc
-          .save()
-          .rect(x, doc.y, colWidth, rowHeight)
-          .fill('#f1f5f9')
-          .stroke('#e2e8f0');
+        doc.save().rect(x, doc.y, colWidth, rowHeight).fill('#f1f5f9').stroke('#e2e8f0');
       } else {
         doc.save().rect(x, doc.y, colWidth, rowHeight).stroke('#e2e8f0');
       }
@@ -98,7 +91,10 @@ export const exportPdf = (
 
   drawRow(headers, true);
   rows.forEach((row) => {
-    drawRow(headers.map((h) => sanitize(row[h])), false);
+    drawRow(
+      headers.map((h) => sanitize(row[h])),
+      false
+    );
   });
 
   doc.end();

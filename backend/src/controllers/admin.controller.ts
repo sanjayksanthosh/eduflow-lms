@@ -46,7 +46,11 @@ export const deleteStudent = asyncHandler(async (req: Request, res: Response) =>
 
 export const setStudentStatus = asyncHandler(async (req: Request, res: Response) => {
   const result = await studentService.updateStudentStatus(req.params.id, req.body.status);
-  res.json({ success: true, message: `Student ${result.status === 'SUSPENDED' ? 'suspended' : 'activated'}.`, data: result });
+  res.json({
+    success: true,
+    message: `Student ${result.status === 'SUSPENDED' ? 'suspended' : 'activated'}.`,
+    data: result,
+  });
 });
 
 export const assignStudentBatch = asyncHandler(async (req: Request, res: Response) => {
@@ -126,7 +130,11 @@ export const updateBatch = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const deleteBatch = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Batch deleted.', data: await batchService.deleteBatch(req.params.id) });
+  res.json({
+    success: true,
+    message: 'Batch deleted.',
+    data: await batchService.deleteBatch(req.params.id),
+  });
 });
 
 export const assignStudents = asyncHandler(async (req: Request, res: Response) => {
@@ -155,11 +163,19 @@ export const createCourse = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const updateCourse = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Course updated.', data: await courseService.updateCourse(req.params.id, req.body) });
+  res.json({
+    success: true,
+    message: 'Course updated.',
+    data: await courseService.updateCourse(req.params.id, req.body),
+  });
 });
 
 export const deleteCourse = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Course deleted.', data: await courseService.deleteCourse(req.params.id) });
+  res.json({
+    success: true,
+    message: 'Course deleted.',
+    data: await courseService.deleteCourse(req.params.id),
+  });
 });
 
 export const createModule = asyncHandler(async (req: Request, res: Response) => {
@@ -168,11 +184,19 @@ export const createModule = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const updateModule = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Module updated.', data: await courseService.updateModule(req.params.id, req.body) });
+  res.json({
+    success: true,
+    message: 'Module updated.',
+    data: await courseService.updateModule(req.params.id, req.body),
+  });
 });
 
 export const deleteModule = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Module deleted.', data: await courseService.deleteModule(req.params.id) });
+  res.json({
+    success: true,
+    message: 'Module deleted.',
+    data: await courseService.deleteModule(req.params.id),
+  });
 });
 
 export const createLesson = asyncHandler(async (req: Request, res: Response) => {
@@ -181,11 +205,19 @@ export const createLesson = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const updateLesson = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Lesson updated.', data: await courseService.updateLesson(req.params.id, req.body) });
+  res.json({
+    success: true,
+    message: 'Lesson updated.',
+    data: await courseService.updateLesson(req.params.id, req.body),
+  });
 });
 
 export const deleteLesson = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Lesson deleted.', data: await courseService.deleteLesson(req.params.id) });
+  res.json({
+    success: true,
+    message: 'Lesson deleted.',
+    data: await courseService.deleteLesson(req.params.id),
+  });
 });
 
 export const uploadLessonFile = asyncHandler(async (req: Request, res: Response) => {
@@ -199,7 +231,10 @@ export const uploadLessonFile = asyncHandler(async (req: Request, res: Response)
 export const getAttendance = asyncHandler(async (req: Request, res: Response) => {
   const { batchId, date } = req.query as { batchId?: string; date?: string };
   if (batchId) {
-    res.json({ success: true, data: await attendanceService.attendanceForBatchDate(batchId, date) });
+    res.json({
+      success: true,
+      data: await attendanceService.attendanceForBatchDate(batchId, date),
+    });
     return;
   }
   res.json({ success: true, data: await attendanceService.todayAttendanceSummary() });
@@ -208,7 +243,9 @@ export const getAttendance = asyncHandler(async (req: Request, res: Response) =>
 export const markAttendance = asyncHandler(async (req: Request, res: Response) => {
   const result = await attendanceService.markAttendance({
     ...req.body,
-    mentorId: req.body.batchId ? (await prisma.batch.findUniqueOrThrow({ where: { id: req.body.batchId } })).mentorId ?? '' : '',
+    mentorId: req.body.batchId
+      ? ((await prisma.batch.findUniqueOrThrow({ where: { id: req.body.batchId } })).mentorId ?? '')
+      : '',
     userId: req.user!.id,
     ip: req.ip,
   });
@@ -217,7 +254,10 @@ export const markAttendance = asyncHandler(async (req: Request, res: Response) =
 
 export const getStudentAttendance = asyncHandler(async (req: Request, res: Response) => {
   const { month } = req.query as { month?: string };
-  res.json({ success: true, data: await attendanceService.attendanceHistoryForStudent(req.params.id, month) });
+  res.json({
+    success: true,
+    data: await attendanceService.attendanceHistoryForStudent(req.params.id, month),
+  });
 });
 
 // ---------------- Assignments ----------------
@@ -241,16 +281,28 @@ export const createAssignment = asyncHandler(async (req: Request, res: Response)
 });
 
 export const updateAssignment = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Assignment updated.', data: await assignmentService.updateAssignment(req.params.id, req.body) });
+  res.json({
+    success: true,
+    message: 'Assignment updated.',
+    data: await assignmentService.updateAssignment(req.params.id, req.body),
+  });
 });
 
 export const deleteAssignment = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Assignment deleted.', data: await assignmentService.deleteAssignment(req.params.id) });
+  res.json({
+    success: true,
+    message: 'Assignment deleted.',
+    data: await assignmentService.deleteAssignment(req.params.id),
+  });
 });
 
 // ---------------- Announcements ----------------
 export const listAnnouncements = asyncHandler(async (req: Request, res: Response) => {
-  const result = await announcementService.announcementList(req.query as Record<string, unknown>, req.user!.role, req.user!.id);
+  const result = await announcementService.announcementList(
+    req.query as Record<string, unknown>,
+    req.user!.role,
+    req.user!.id
+  );
   res.json({ success: true, data: result.data, meta: result.meta });
 });
 
@@ -260,34 +312,58 @@ export const createAnnouncement = asyncHandler(async (req: Request, res: Respons
 });
 
 export const updateAnnouncement = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Announcement updated.', data: await announcementService.updateAnnouncement(req.params.id, req.body) });
+  res.json({
+    success: true,
+    message: 'Announcement updated.',
+    data: await announcementService.updateAnnouncement(req.params.id, req.body),
+  });
 });
 
 export const deleteAnnouncement = asyncHandler(async (req: Request, res: Response) => {
-  res.json({ success: true, message: 'Announcement deleted.', data: await announcementService.deleteAnnouncement(req.params.id) });
+  res.json({
+    success: true,
+    message: 'Announcement deleted.',
+    data: await announcementService.deleteAnnouncement(req.params.id),
+  });
 });
 
 // ---------------- Reports ----------------
 const reportFilename = (name: string) => `eduflow-${name}-${new Date().toISOString().slice(0, 10)}`;
 
 export const attendanceReport = asyncHandler(async (req: Request, res: Response) => {
-  const report = await reportService.attendanceReport(req.query as { batchId?: string; from?: string; to?: string });
+  const report = await reportService.attendanceReport(
+    req.query as { batchId?: string; from?: string; to?: string }
+  );
   const format = (req.query.format as string) ?? 'json';
   if (format === 'csv') return exportCsv(res, reportFilename('attendance'), report.rows);
   if (format === 'xlsx') return exportExcel(res, reportFilename('attendance'), report.rows);
   if (format === 'pdf') {
-    return exportPdf(res, reportFilename('attendance'), 'Attendance Report', report.rows, 'EduFlow LMS');
+    return exportPdf(
+      res,
+      reportFilename('attendance'),
+      'Attendance Report',
+      report.rows,
+      'EduFlow LMS'
+    );
   }
   res.json({ success: true, data: report });
 });
 
 export const performanceReport = asyncHandler(async (req: Request, res: Response) => {
-  const report = await reportService.studentPerformanceReport(req.query.batchId as string | undefined);
+  const report = await reportService.studentPerformanceReport(
+    req.query.batchId as string | undefined
+  );
   const format = (req.query.format as string) ?? 'json';
   if (format === 'csv') return exportCsv(res, reportFilename('performance'), report.rows);
   if (format === 'xlsx') return exportExcel(res, reportFilename('performance'), report.rows);
   if (format === 'pdf') {
-    return exportPdf(res, reportFilename('performance'), 'Student Performance Report', report.rows, 'EduFlow LMS');
+    return exportPdf(
+      res,
+      reportFilename('performance'),
+      'Student Performance Report',
+      report.rows,
+      'EduFlow LMS'
+    );
   }
   res.json({ success: true, data: report });
 });
@@ -298,7 +374,13 @@ export const assignmentReport = asyncHandler(async (req: Request, res: Response)
   if (format === 'csv') return exportCsv(res, reportFilename('assignments'), report.rows);
   if (format === 'xlsx') return exportExcel(res, reportFilename('assignments'), report.rows);
   if (format === 'pdf') {
-    return exportPdf(res, reportFilename('assignments'), 'Assignment Report', report.rows, 'EduFlow LMS');
+    return exportPdf(
+      res,
+      reportFilename('assignments'),
+      'Assignment Report',
+      report.rows,
+      'EduFlow LMS'
+    );
   }
   res.json({ success: true, data: report });
 });
@@ -332,7 +414,11 @@ export const getSettings = asyncHandler(async (_req: Request, res: Response) => 
 
 export const updateSettings = asyncHandler(async (req: Request, res: Response) => {
   await settingsService.updateSettings(req.body);
-  res.json({ success: true, message: 'Settings saved.', data: await settingsService.getSettings() });
+  res.json({
+    success: true,
+    message: 'Settings saved.',
+    data: await settingsService.getSettings(),
+  });
 });
 
 // ---------------- Activity logs ----------------
@@ -348,5 +434,9 @@ export const getActivityLogs = asyncHandler(async (req: Request, res: Response) 
       include: { user: { select: { firstName: true, lastName: true, role: true, email: true } } },
     }),
   ]);
-  res.json({ success: true, data: logs, meta: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 } });
+  res.json({
+    success: true,
+    data: logs,
+    meta: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 },
+  });
 });

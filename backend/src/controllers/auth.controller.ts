@@ -5,11 +5,7 @@ import { env } from '../config/env';
 import { ApiError } from '../utils/ApiError';
 import { asyncHandler } from '../utils/asyncHandler';
 import { hashPassword, verifyPassword } from '../utils/password';
-import {
-  signAccessToken,
-  signRefreshToken,
-  verifyRefreshToken,
-} from '../services/token.service';
+import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../services/token.service';
 import { logActivity } from '../services/activity.service';
 import { emailTemplates, sendEmail } from '../services/email.service';
 import { createNotification } from '../services/notification.service';
